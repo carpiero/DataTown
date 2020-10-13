@@ -83,7 +83,7 @@ app.layout = html.Div(
                     [
                         html.A(
                             html.Button("Learn More", id="learn-more-button"),
-                            href="https://github.com/carpiero/Final_project",
+                            href="https://github.com/carpiero/DataTown",
                         )
                     ],
                     className="one-third column",
