@@ -13,8 +13,7 @@ import re
 import locale
 import plotly.graph_objects as go
 
-# Multi-dropdown options
-# from controls import COUNTIES, WELL_STATUSES, WELL_TYPES, WELL_COLORS
+#####   controls
 from controls import  CCAA_dict, PROV,  MUNICIPIOS, PDC, df_final_pob_melt, df_final_pob, df_indicadores_pob, \
     df_final_pob_melt_PC, df_table_c, df_table_n, df_table_p, df_n, df_c, df_p, df_count_c, df_count_c_pc, df_count_p, df_count_p_pc, \
     counties, CCAA_CO, PROV_CO, MUNI_CO, df_zoom_pob
@@ -23,11 +22,7 @@ from controls import  CCAA_dict, PROV,  MUNICIPIOS, PDC, df_final_pob_melt, df_f
 
 df_final_pob_melt_PC['Descripción'] = df_final_pob_melt_PC['Descripción'].str.replace(r'^...' , '')
 
-
-# get relative data folder
-# PATH = pathlib.Path(__file__).parent
-# DATA_PATH = PATH.joinpath("data").resolve()
-
+############# RUN APP
 app = dash.Dash(__name__, meta_tags=[{"name": "viewport", "content": "width=device-width"}])
 server = app.server
 
@@ -44,52 +39,6 @@ pdc_type_options = [{"label": PDC[x], "value": x} for x in PDC ]
 locale.setlocale(locale.LC_ALL, '')
 
 #####################################################3
-# county_options = [
-#     {"label": str(COUNTIES[county]), "value": str(county)} for county in COUNTIES
-# ]
-
-# well_status_options = [
-#     {"label": str(WELL_STATUSES[well_status]), "value": str(well_status)}
-#     for well_status in WELL_STATUSES
-# ]
-#
-# well_type_options = [
-#     {"label": str(WELL_TYPES[well_type]), "value": str(well_type)}
-#     for well_type in WELL_TYPES
-# ]
-
-
-# Load data
-# df = pd.read_csv(DATA_PATH.joinpath("wellspublic.csv"), low_memory=False)
-# df["Date_Well_Completed"] = pd.to_datetime(df["Date_Well_Completed"])
-# df = df[df["Date_Well_Completed"] > dt.datetime(1960, 1, 1)]
-#
-# trim = df[["API_WellNo", "Well_Type", "Well_Name"]]
-# trim.index = trim["API_WellNo"]
-# dataset = trim.to_dict(orient="index")
-#
-# points = pickle.load(open(DATA_PATH.joinpath("points.pkl"), "rb"))
-
-
-# Create global chart template
-# mapbox_access_token = "pk.eyJ1IjoicGxvdGx5bWFwYm94IiwiYSI6ImNrOWJqb2F4djBnMjEzbG50amg0dnJieG4ifQ.Zme1-Uzoi75IaFbieBDl3A"
-#
-# layout = dict(
-#     autosize=True,
-#     automargin=True,
-#     margin=dict(l=30, r=30, b=20, t=40),
-#     hovermode="closest",
-#     plot_bgcolor="#F9F9F9",
-#     paper_bgcolor="#F9F9F9",
-#     legend=dict(font=dict(size=10), orientation="h"),
-#     title="Satellite Overview",
-#     mapbox=dict(
-#         accesstoken=mapbox_access_token,
-#         style="light",
-#         center=dict(lon=-78.05, lat=42.54),
-#         zoom=7,
-#     ),
-# )
 
 # Create app layout
 app.layout = html.Div(
@@ -259,6 +208,9 @@ app.clientside_callback(
     Output("output-clientside", "children"),
     [Input("count_graph", "figure")],
 )
+
+
+############# dropdown
 
 @app.callback(
     [Output("PROV_types", "value"),Output("PROV_types", "options")], [Input("CCAA_types", "value")]
@@ -472,172 +424,10 @@ def update_text(CCAA_types, PROV_types,municipio_types,partida_de_coste_types ):
 
     return f'{value} €/hab.'
 
-# Helper functions
-# def human_format(num):
-#     if num == 0:
-#         return "0"
-#
-#     magnitude = int(math.log(num, 1000))
-#     mantissa = str(int(num / (1000 ** magnitude)))
-#     return mantissa + ["", "K", "M", "G", "T", "P"][magnitude]
-#
-#
-# def filter_dataframe(df, well_statuses, well_types, year_slider):
-#     dff = df[
-#         df["Well_Status"].isin(well_statuses)
-#         & df["Well_Type"].isin(well_types)
-#         & (df["Date_Well_Completed"] > dt.datetime(year_slider[0], 1, 1))
-#         & (df["Date_Well_Completed"] < dt.datetime(year_slider[1], 1, 1))
-#     ]
-#     return dff
-#
-#
-# def produce_individual(api_well_num):
-#     try:
-#         points[api_well_num]
-#     except:
-#         return None, None, None, None
-#
-#     index = list(
-#         range(min(points[api_well_num].keys()), max(points[api_well_num].keys()) + 1)
-#     )
-#     gas = []
-#     oil = []
-#     water = []
-#
-#     for year in index:
-#         try:
-#             gas.append(points[api_well_num][year]["Gas Produced, MCF"])
-#         except:
-#             gas.append(0)
-#         try:
-#             oil.append(points[api_well_num][year]["Oil Produced, bbl"])
-#         except:
-#             oil.append(0)
-#         try:
-#             water.append(points[api_well_num][year]["Water Produced, bbl"])
-#         except:
-#             water.append(0)
-#
-#     return index, gas, oil, water
-#
-#
-# def produce_aggregate(selected, year_slider):
-#
-#     index = list(range(max(year_slider[0], 1985), 2016))
-#     gas = []
-#     oil = []
-#     water = []
-#
-#     for year in index:
-#         count_gas = 0
-#         count_oil = 0
-#         count_water = 0
-#         for api_well_num in selected:
-#             try:
-#                 count_gas += points[api_well_num][year]["Gas Produced, MCF"]
-#             except:
-#                 pass
-#             try:
-#                 count_oil += points[api_well_num][year]["Oil Produced, bbl"]
-#             except:
-#                 pass
-#             try:
-#                 count_water += points[api_well_num][year]["Water Produced, bbl"]
-#             except:
-#                 pass
-#         gas.append(count_gas)
-#         oil.append(count_oil)
-#         water.append(count_water)
-#
-#     return index, gas, oil, water
 
 
-# Create callbacks
-# app.clientside_callback(
-#     ClientsideFunction(namespace="clientside", function_name="resize"),
-#     Output("output-clientside", "children"),
-#     [Input("count_graph", "figure")],
-# )
 
-
-# @app.callback(
-#     Output("aggregate_data", "data"),
-#     [
-#         Input("well_statuses", "value"),
-#         Input("well_types", "value"),
-#         Input("year_slider", "value"),
-#     ],
-# )
-# def update_production_text(well_statuses, well_types, year_slider):
-#
-#     dff = filter_dataframe(df, well_statuses, well_types, year_slider)
-#     selected = dff["API_WellNo"].values
-#     index, gas, oil, water = produce_aggregate(selected, year_slider)
-#     return [human_format(sum(gas)), human_format(sum(oil)), human_format(sum(water))]
-
-
-# # Radio -> multi
-# @app.callback(
-#     Output("well_statuses", "value"), [Input("well_status_selector", "value")]
-# )
-# def display_status(selector):
-#     if selector == "all":
-#         return list(WELL_STATUSES.keys())
-#     elif selector == "active":
-#         return ["AC"]
-#     return []
-#
-#
-# # Radio -> multi
-# @app.callback(Output("well_types", "value"), [Input("well_type_selector", "value")])
-# def display_type(selector):
-#     if selector == "all":
-#         return list(WELL_TYPES.keys())
-#     elif selector == "productive":
-#         return ["GD", "GE", "GW", "IG", "IW", "OD", "OE", "OW"]
-#     return []
-#
-#
-# # Slider -> count graph
-# @app.callback(Output("year_slider", "value"), [Input("count_graph", "selectedData")])
-# def update_year_slider(count_graph_selected):
-#
-#     if count_graph_selected is None:
-#         return [1990, 2010]
-#
-#     nums = [int(point["pointNumber"]) for point in count_graph_selected["points"]]
-#     return [min(nums) + 1960, max(nums) + 1961]
-#
-#
-# # Selectors -> well text
-# @app.callback(
-#     Output("well_text", "children"),
-#     [
-#         Input("well_statuses", "value"),
-#         Input("well_types", "value"),
-#         Input("year_slider", "value"),
-#     ],
-# )
-# def update_well_text(well_statuses, well_types, year_slider):
-#
-#     dff = filter_dataframe(df, well_statuses, well_types, year_slider)
-#     return dff.shape[0]
-#
-#
-# @app.callback(
-#     [
-#         Output("gasText", "children"),
-#         Output("oilText", "children"),
-#         Output("waterText", "children"),
-#     ],
-#     [Input("aggregate_data", "data")],
-# )
-# def update_text(data):
-#     return data[0] + " mcf", data[1] + " bbl", data[2] + " bbl"
-
-
-# Selectors -> main graph
+################    count graph
 @app.callback(
     Output("count_graph", "figure"),
     [
@@ -810,6 +600,8 @@ def make_count_figure(CCAA_types, PROV_types,municipio_types,partida_de_coste_ty
 
 
 
+
+################    main graph
 @app.callback(
     Output("main_graph", "figure"),
     [
@@ -991,6 +783,9 @@ def make_main_figure(CCAA_types, PROV_types,municipio_types,partida_de_coste_typ
 
     return fig
 
+
+################    individual graph
+
 @app.callback(Output("individual_graph", "figure"),
     [
         Input("CCAA_types" , "value") , Input("PROV_types" , "value") , Input("municipio_types" , "value")
@@ -1116,6 +911,8 @@ def make_individual_figure(CCAA_types, PROV_types,municipio_types, main_graph):
 
     return fig
 
+
+################    map graph
 @app.callback(
     Output("map_graph", "figure"),
     [
@@ -1190,8 +987,8 @@ def make_map_figure(CCAA_types, PROV_types,municipio_types,partida_de_coste_type
             median = df['PC_TOTAL'].median()
             df_zoom_po=df_zoom_pob
             df_zoom_po=df_zoom_po[df_zoom_po['CCAA']==CCAA_types]
-            df_zoom_po.to_file('../data/processed/shapefiles_espana_municipiosCCAA.geojson' , driver='GeoJSON')
-            with open('../data/processed/shapefiles_espana_municipiosCCAA.geojson') as response:
+            df_zoom_po.to_file('./data/processed/shapefiles_espana_municipiosCCAA.geojson' , driver='GeoJSON')
+            with open('./data/processed/shapefiles_espana_municipiosCCAA.geojson') as response:
                 countiesCCAA = json.load(response)
 
 
@@ -1237,8 +1034,8 @@ def make_map_figure(CCAA_types, PROV_types,municipio_types,partida_de_coste_type
             median = df['PC_TOTAL'].median()
             df_zoom_po = df_zoom_pob
             df_zoom_po = df_zoom_po[df_zoom_po['Provincia'] == PROV_types]
-            df_zoom_po.to_file('../data/processed/shapefiles_espana_municipiosPROV.geojson' , driver='GeoJSON')
-            with open('../data/processed/shapefiles_espana_municipiosPROV.geojson') as response:
+            df_zoom_po.to_file('./data/processed/shapefiles_espana_municipiosPROV.geojson' , driver='GeoJSON')
+            with open('./data/processed/shapefiles_espana_municipiosPROV.geojson') as response:
                 countiesPROV = json.load(response)
 
             fig = px.choropleth_mapbox(df , geojson=countiesPROV , locations='codigo_geo' , color='PC_TOTAL' ,
@@ -1289,8 +1086,8 @@ def make_map_figure(CCAA_types, PROV_types,municipio_types,partida_de_coste_type
             median = df['PC_TOTAL'].median()
             df_zoom_po = df_zoom_pob
             df_zoom_po = df_zoom_po[df_zoom_po['Provincia'] == PROV_types]
-            df_zoom_po.to_file('../data/processed/shapefiles_espana_municipiosPROV.geojson' , driver='GeoJSON')
-            with open('../data/processed/shapefiles_espana_municipiosPROV.geojson') as response:
+            df_zoom_po.to_file('./data/processed/shapefiles_espana_municipiosPROV.geojson' , driver='GeoJSON')
+            with open('./data/processed/shapefiles_espana_municipiosPROV.geojson') as response:
                 countiesPROV = json.load(response)
 
             fig = px.choropleth_mapbox(df , geojson=countiesPROV , locations='codigo_geo' , color='PC_TOTAL' ,
@@ -1336,8 +1133,8 @@ def make_map_figure(CCAA_types, PROV_types,municipio_types,partida_de_coste_type
             median = df['PC_TOTAL'].median()
             df_zoom_po = df_zoom_pob
             df_zoom_po = df_zoom_po[df_zoom_po['Provincia'] == PROV]
-            df_zoom_po.to_file('../data/processed/shapefiles_espana_municipiosPROV.geojson' , driver='GeoJSON')
-            with open('../data/processed/shapefiles_espana_municipiosPROV.geojson') as response:
+            df_zoom_po.to_file('./data/processed/shapefiles_espana_municipiosPROV.geojson' , driver='GeoJSON')
+            with open('./data/processed/shapefiles_espana_municipiosPROV.geojson') as response:
                 countiesPROV = json.load(response)
 
             fig = px.choropleth_mapbox(df , geojson=countiesPROV , locations='codigo_geo' , color='PC_TOTAL' ,
@@ -1443,8 +1240,8 @@ def make_map_figure(CCAA_types, PROV_types,municipio_types,partida_de_coste_type
             median = df['coste_efectivo_PC'].median()
             df_zoom_po = df_zoom_pob
             df_zoom_po = df_zoom_po[df_zoom_po['CCAA'] == CCAA_types]
-            df_zoom_po.to_file('../data/processed/shapefiles_espana_municipiosCCAA.geojson' , driver='GeoJSON')
-            with open('../data/processed/shapefiles_espana_municipiosCCAA.geojson') as response:
+            df_zoom_po.to_file('./data/processed/shapefiles_espana_municipiosCCAA.geojson' , driver='GeoJSON')
+            with open('./data/processed/shapefiles_espana_municipiosCCAA.geojson') as response:
                 countiesCCAA = json.load(response)
 
             fig = px.choropleth_mapbox(df , geojson=countiesCCAA , locations='codigo_geo' , color='coste_efectivo_PC' ,
@@ -1490,8 +1287,8 @@ def make_map_figure(CCAA_types, PROV_types,municipio_types,partida_de_coste_type
             median = df['coste_efectivo_PC'].median()
             df_zoom_po = df_zoom_pob
             df_zoom_po = df_zoom_po[df_zoom_po['Provincia'] == PROV_types]
-            df_zoom_po.to_file('../data/processed/shapefiles_espana_municipiosPROV.geojson' , driver='GeoJSON')
-            with open('../data/processed/shapefiles_espana_municipiosPROV.geojson') as response:
+            df_zoom_po.to_file('./data/processed/shapefiles_espana_municipiosPROV.geojson' , driver='GeoJSON')
+            with open('./data/processed/shapefiles_espana_municipiosPROV.geojson') as response:
                 countiesPROV = json.load(response)
 
             fig = px.choropleth_mapbox(df , geojson=countiesPROV , locations='codigo_geo' , color='coste_efectivo_PC' ,
@@ -1536,8 +1333,8 @@ def make_map_figure(CCAA_types, PROV_types,municipio_types,partida_de_coste_type
             median = df['coste_efectivo_PC'].median()
             df_zoom_po = df_zoom_pob
             df_zoom_po = df_zoom_po[df_zoom_po['Provincia'] == PROV_types]
-            df_zoom_po.to_file('../data/processed/shapefiles_espana_municipiosPROV.geojson' , driver='GeoJSON')
-            with open('../data/processed/shapefiles_espana_municipiosPROV.geojson') as response:
+            df_zoom_po.to_file('./data/processed/shapefiles_espana_municipiosPROV.geojson' , driver='GeoJSON')
+            with open('./data/processed/shapefiles_espana_municipiosPROV.geojson') as response:
                 countiesPROV = json.load(response)
 
             fig = px.choropleth_mapbox(df , geojson=countiesPROV , locations='codigo_geo' , color='coste_efectivo_PC' ,
@@ -1583,8 +1380,8 @@ def make_map_figure(CCAA_types, PROV_types,municipio_types,partida_de_coste_type
             median = df['coste_efectivo_PC'].median()
             df_zoom_po = df_zoom_pob
             df_zoom_po = df_zoom_po[df_zoom_po['Provincia'] == PROV]
-            df_zoom_po.to_file('../data/processed/shapefiles_espana_municipiosPROV.geojson' , driver='GeoJSON')
-            with open('../data/processed/shapefiles_espana_municipiosPROV.geojson') as response:
+            df_zoom_po.to_file('./data/processed/shapefiles_espana_municipiosPROV.geojson' , driver='GeoJSON')
+            with open('./data/processed/shapefiles_espana_municipiosPROV.geojson') as response:
                 countiesPROV = json.load(response)
 
             fig = px.choropleth_mapbox(df , geojson=countiesPROV , locations='codigo_geo' , color='coste_efectivo_PC' ,
