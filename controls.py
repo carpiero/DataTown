@@ -41,6 +41,10 @@ df_table_p=df_indicadores_pob.pivot_table(index=['Provincia','Descripción' , 'U
                                                       values=['Nº unidades'] ,
                                                       aggfunc=sum).reset_index()
 
+# df_table_m=df_indicadores_pob.pivot_table(index=['Nombre Ente Principal','Descripción' , 'Unidades físicas de referencia'] ,
+#                                                       values=['Nº unidades'] ,
+#                                                       aggfunc=sum).reset_index()
+
 
 ###########################   individual graph
 
