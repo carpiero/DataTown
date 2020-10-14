@@ -961,28 +961,28 @@ def make_map_figure(CCAA_types, PROV_types,municipio_types,partida_de_coste_type
 
         if CCAA_types == 'TODAS' and PROV_types == 'TODAS' and municipio_types == 'TODOS':
             df = df_final_pob
-            df['Población'] = df['Población 2018']
-            df['PC_TOTAL'] = df.apply(lambda new: round(new['PC_TOTAL'] , 0) , axis=1)
-            q9 = df['PC_TOTAL'].quantile(0.90)
-            q1 = df['PC_TOTAL'].quantile(0.10)
-            max = df['PC_TOTAL'].max()
-            min = df['PC_TOTAL'].min()
-            median = df['PC_TOTAL'].median()
-
-            fig = px.choropleth_mapbox(df , geojson=counties , locations='codigo_geo' , color='PC_TOTAL' ,
-                                       color_continuous_scale="haline" ,
-                                       range_color=(q1 , q9) ,
-                                       mapbox_style="carto-positron" ,
-                                       featureidkey="properties.f_codmun" ,
-                                       zoom=4.5 , center={"lat": 39.8 , "lon": -4.3} ,
-                                       opacity=0.5 , labels={'PC_TOTAL': 'Coste por habitante'} ,
-                                       hover_name='Nombre Ente Principal' , hover_data={'codigo_geo': False ,
-                                                                                        'Población': ':,' ,
-                                                                                        'PC_TOTAL': ":,€"} ,
-                                       )
-
-            fig.update_layout(coloraxis_colorbar=dict(tickmode='array' , tickvals=[q1 , (q9 + q1) / 2 , q9] ,
-                                                      ticktext=[min , median , max]))
+            # df['Población'] = df['Población 2018']
+            # df['PC_TOTAL'] = df.apply(lambda new: round(new['PC_TOTAL'] , 0) , axis=1)
+            # q9 = df['PC_TOTAL'].quantile(0.90)
+            # q1 = df['PC_TOTAL'].quantile(0.10)
+            # max = df['PC_TOTAL'].max()
+            # min = df['PC_TOTAL'].min()
+            # median = df['PC_TOTAL'].median()
+            #
+            # fig = px.choropleth_mapbox(df , geojson=counties , locations='codigo_geo' , color='PC_TOTAL' ,
+            #                            color_continuous_scale="haline" ,
+            #                            range_color=(q1 , q9) ,
+            #                            mapbox_style="carto-positron" ,
+            #                            featureidkey="properties.f_codmun" ,
+            #                            zoom=4.5 , center={"lat": 39.8 , "lon": -4.3} ,
+            #                            opacity=0.5 , labels={'PC_TOTAL': 'Coste por habitante'} ,
+            #                            hover_name='Nombre Ente Principal' , hover_data={'codigo_geo': False ,
+            #                                                                             'Población': ':,' ,
+            #                                                                             'PC_TOTAL': ":,€"} ,
+            #                            )
+            #
+            # fig.update_layout(coloraxis_colorbar=dict(tickmode='array' , tickvals=[q1 , (q9 + q1) / 2 , q9] ,
+            #                                           ticktext=[min , median , max]))
 
 
 
