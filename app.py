@@ -18,7 +18,7 @@ warnings.filterwarnings('ignore')
 
 #####   controls
 from controls import  CCAA_dict, PROV,  MUNICIPIOS, PDC, df_final_pob_melt, df_final_pob, df_indicadores_pob, df_final_pob_dropdown,\
-    df_final_pob_melt_PC, df_table_c, df_table_n, df_table_p, df_table_m,  df_n, df_c, df_p, df_count_c, df_count_c_pc, df_count_p, df_count_p_pc, \
+    df_final_pob_dropdown_c, df_final_pob_melt_PC, df_table_c, df_table_n, df_table_p, df_table_m,  df_n, df_c, df_p, df_count_c, df_count_c_pc, df_count_p, df_count_p_pc, \
     counties, CCAA_CO, PROV_CO, MUNI_CO, df_zoom_pob
 
 #################  change data
@@ -267,9 +267,8 @@ def display_status(CCAA_types, PROV_types):
 )
 def display_status(CCAA_types, PROV_types,municipio_types):
     if  municipio_types != 'TODOS':
-        pdc_def = sorted(list(df_final_pob_melt\
-        .loc[(df_final_pob_melt['Nombre Ente Principal'] == municipio_types) & (df_final_pob_melt['coste_efectivo']>100)
-        ,'Descripción'].unique()))
+        pdc_def = sorted(list(df_final_pob_dropdown_c.loc[df_final_pob_dropdown_c['Nombre Ente Principal'] == municipio_types,
+        'Descripción'].unique()))
 
         pdc_def.insert(0 , 'TODOS')
         PDC_def = dict(zip(pdc_def , pdc_def))
@@ -693,7 +692,7 @@ def make_main_figure(CCAA_types, PROV_types,municipio_types,partida_de_coste_typ
             df_table = df_table.loc[(df_table['Descripción'] == partida_de_coste_types) &\
                                               (df_table['Nº unidades'] > 0)]
 
-            df_table['Nº unidades'] = df_table['Nº unidades'].apply(lambda x: round(x , 0))
+            # df_table['Nº unidades'] = df_table['Nº unidades'].apply(lambda x: round(x , 0))
             df_table['Nº unidades'] = df_table['Nº unidades'].map('{:,.0f}'.format).str.replace("," , "~").str.replace(
                 "." , ",").str.replace("~" , ".")
 
@@ -702,7 +701,7 @@ def make_main_figure(CCAA_types, PROV_types,municipio_types,partida_de_coste_typ
             fig.add_trace(go.Table(
                 columnwidth=[200 , 90] ,
                 header=dict(
-                    values=list(df_indicadores_pob[['Unidades físicas de referencia' , 'Nº unidades']].columns) ,
+                    values=['Unidades físicas de referencia', 'Nº unidades'] ,
                     fill_color='rgb(55, 83, 109)' ,line_width=5,height=35,
                     align=['left' , 'center'] ,
                     font=dict(color='white' , size=15)) ,
@@ -717,7 +716,7 @@ def make_main_figure(CCAA_types, PROV_types,municipio_types,partida_de_coste_typ
             df_table = df_table.loc[(df_table['CCAA'] == CCAA_types) & (df_table['Descripción'] == partida_de_coste_types) & \
                                     (df_table['Nº unidades'] > 0)]
 
-            df_table['Nº unidades'] = df_table['Nº unidades'].apply(lambda x: round(x , 0))
+            # df_table['Nº unidades'] = df_table['Nº unidades'].apply(lambda x: round(x , 0))
             df_table['Nº unidades'] = df_table['Nº unidades'].map('{:,.0f}'.format).str.replace("," , "~").str.replace(
                 "." , ",").str.replace("~" , ".")
 
@@ -726,7 +725,7 @@ def make_main_figure(CCAA_types, PROV_types,municipio_types,partida_de_coste_typ
             fig.add_trace(go.Table(
                 columnwidth=[200 , 90] ,
                 header=dict(
-                    values=list(df_indicadores_pob[['Unidades físicas de referencia' , 'Nº unidades']].columns) ,
+                    values=['Unidades físicas de referencia', 'Nº unidades'] ,
                     fill_color='rgb(55, 83, 109)' ,line_width=5,height=35,
                     align=['left' , 'center'] ,
                     font=dict(color='white' , size=15)) ,
@@ -741,7 +740,7 @@ def make_main_figure(CCAA_types, PROV_types,municipio_types,partida_de_coste_typ
                 (df_table['Provincia'] == PROV_types) & (df_table['Descripción'] == partida_de_coste_types) & \
                 (df_table['Nº unidades'] > 0)]
 
-            df_table['Nº unidades'] = df_table['Nº unidades'].apply(lambda x: round(x , 0))
+            # df_table['Nº unidades'] = df_table['Nº unidades'].apply(lambda x: round(x , 0))
             df_table['Nº unidades'] = df_table['Nº unidades'].map('{:,.0f}'.format).str.replace("," , "~").str.replace(
                 "." , ",").str.replace("~" , ".")
 
@@ -750,7 +749,7 @@ def make_main_figure(CCAA_types, PROV_types,municipio_types,partida_de_coste_typ
             fig.add_trace(go.Table(
                 columnwidth=[200 , 90] ,
                 header=dict(
-                    values=list(df_indicadores_pob[['Unidades físicas de referencia' , 'Nº unidades']].columns) ,
+                    values=['Unidades físicas de referencia', 'Nº unidades'] ,
                     fill_color='rgb(55, 83, 109)' ,line_width=5,height=35,
                     align=['left' , 'center'] ,
                     font=dict(color='white' , size=15)) ,
@@ -765,7 +764,7 @@ def make_main_figure(CCAA_types, PROV_types,municipio_types,partida_de_coste_typ
                 (df_table['Provincia'] == PROV_types) & (df_table['Descripción'] == partida_de_coste_types) & \
                 (df_table['Nº unidades'] > 0)]
 
-            df_table['Nº unidades'] = df_table['Nº unidades'].apply(lambda x: round(x , 0))
+            # df_table['Nº unidades'] = df_table['Nº unidades'].apply(lambda x: round(x , 0))
             df_table['Nº unidades'] = df_table['Nº unidades'].map('{:,.0f}'.format).str.replace("," , "~").str.replace(
                 "." , ",").str.replace("~" , ".")
 
@@ -774,7 +773,7 @@ def make_main_figure(CCAA_types, PROV_types,municipio_types,partida_de_coste_typ
             fig.add_trace(go.Table(
                 columnwidth=[200 , 90] ,
                 header=dict(
-                    values=list(df_indicadores_pob[['Unidades físicas de referencia' , 'Nº unidades']].columns) ,
+                    values=['Unidades físicas de referencia', 'Nº unidades'] ,
                     fill_color='rgb(55, 83, 109)' ,line_width=5,height=35,
                     align=['left' , 'center'] ,
                     font=dict(color='white' , size=15)) ,
@@ -787,17 +786,16 @@ def make_main_figure(CCAA_types, PROV_types,municipio_types,partida_de_coste_typ
         elif municipio_types != 'TODOS':
             df_table=df_table_m
             df_table= df_table.loc[(df_table['Descripción']==partida_de_coste_types)&\
-                           (df_table['Nombre Ente Principal']==municipio_types)&\
-                            (df_table['Nº unidades']>0)]
+                           (df_table['Nombre Ente Principal']==municipio_types)]
 
-            df_table['Nº unidades'] = df_table['Nº unidades'].apply(lambda x: round(x , 0))
+            # df_table['Nº unidades'] = df_table['Nº unidades'].apply(lambda x: round(x , 0))
             df_table['Nº unidades'] = df_table['Nº unidades'].map('{:,.0f}'.format).str.replace(",", "~").str.replace(".", ",").str.replace("~", ".")
 
             fig = go.Figure()
 
             fig.add_trace(go.Table(
                 columnwidth=[200 , 90],
-                header=dict(values=list(df_indicadores_pob[['Unidades físicas de referencia','Nº unidades']].columns)  ,
+                header=dict(values=['Unidades físicas de referencia', 'Nº unidades'] ,
                             fill_color='rgb(55, 83, 109)' ,line_width=5,height=35,
                             align=['left','center'],
                             font=dict(color='white', size=15)) ,

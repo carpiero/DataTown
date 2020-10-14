@@ -7,7 +7,7 @@ from p_graphic import m_graphic as mg
 def main(df_coste,df_indicadores):
 
     mac.acquire(df_coste,df_indicadores)
-    # mphl.pivot()
+    mphl.pivot()
     mg.graphic()
 
 

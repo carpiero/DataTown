@@ -14,6 +14,7 @@ df_final_pob_melt_PC = pd.read_parquet('./data/main_processed/df_final_pob_melt_
 df_indicadores_pob_pivot = pd.read_parquet('./data/main_processed/df_indicadores_pob_pivot.parquet')
 
 df_final_pob_dropdown=pd.read_parquet('./data/main_processed/df_final_pob_dropdown.parquet')
+df_final_pob_dropdown_c=pd.read_parquet('./data/main_processed/df_final_pob_dropdown_c.parquet')
 
 
 df_final_pob_melt_PC['Descripción'] = df_final_pob_melt_PC['Descripción'].str.replace(r'^...' , '')
