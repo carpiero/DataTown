@@ -12,15 +12,18 @@ import plotly.express as px
 import re
 import locale
 import plotly.graph_objects as go
+import warnings
+
+warnings.filterwarnings('ignore')
 
 #####   controls
-from controls import  CCAA_dict, PROV,  MUNICIPIOS, PDC, df_final_pob_melt, df_final_pob, df_indicadores_pob, \
+from controls import  CCAA_dict, PROV,  MUNICIPIOS, PDC, df_final_pob_melt, df_final_pob, df_indicadores_pob, df_final_pob_dropdown,\
     df_final_pob_melt_PC, df_table_c, df_table_n, df_table_p, df_table_m,  df_n, df_c, df_p, df_count_c, df_count_c_pc, df_count_p, df_count_p_pc, \
     counties, CCAA_CO, PROV_CO, MUNI_CO, df_zoom_pob
 
 #################  change data
 
-df_final_pob_melt_PC['Descripción'] = df_final_pob_melt_PC['Descripción'].str.replace(r'^...' , '')
+# df_final_pob_melt_PC['Descripción'] = df_final_pob_melt_PC['Descripción'].str.replace(r'^...' , '')
 
 ############# RUN APP
 app = dash.Dash(__name__, meta_tags=[{"name": "viewport", "content": "width=device-width"}])
@@ -220,7 +223,8 @@ def display_status(CCAA_types):
         value = list(PROV.keys())[0]
         options = PROV_type_options
     else:
-        prov_def=sorted(df_final_pob_melt.loc[df_final_pob_melt['CCAA']==CCAA_types,'Provincia'].unique().to_list())
+        # prov_def=sorted(df_final_pob_melt.loc[df_final_pob_melt['CCAA']==CCAA_types,'Provincia'].unique().to_list())
+        prov_def = sorted(df_final_pob_dropdown.loc[df_final_pob_dropdown['CCAA'] == CCAA_types , 'Provincia'].unique().to_list())
         prov_def.insert(0, 'TODAS')
         PROV_def = dict(zip(prov_def, prov_def))
         options = [ {"label": PROV_def[x], "value":x}for x in PROV_def ]
@@ -239,14 +243,16 @@ def display_status(CCAA_types, PROV_types):
         options = mun_type_options
 
     elif CCAA_types != 'TODAS' and PROV_types == 'TODAS':
-        mun_def = sorted(df_final_pob_melt.loc[df_final_pob_melt['CCAA'] == CCAA_types ,'Nombre Ente Principal'].unique().to_list())
+        # mun_def = sorted(df_final_pob_melt.loc[df_final_pob_melt['CCAA'] == CCAA_types ,'Nombre Ente Principal'].unique().to_list())
+        mun_def = sorted(df_final_pob_dropdown.loc[df_final_pob_dropdown['CCAA'] == CCAA_types , 'Nombre Ente Principal'].unique().to_list())
         mun_def.insert(0 , 'TODOS')
         MUN_def = dict(zip(mun_def , mun_def))
         options = [{"label": MUN_def[x] , "value": x} for x in MUN_def]
         value = list(MUN_def.keys())[0]
 
     else:
-        mun_def =sorted(df_final_pob_melt.loc[df_final_pob_melt['Provincia']==PROV_types,'Nombre Ente Principal'].unique().to_list())
+        # mun_def =sorted(df_final_pob_melt.loc[df_final_pob_melt['Provincia']==PROV_types,'Nombre Ente Principal'].unique().to_list())
+        mun_def = sorted(df_final_pob_dropdown.loc[df_final_pob_dropdown['Provincia'] == PROV_types , 'Nombre Ente Principal'].unique().to_list())
         mun_def.insert(0, 'TODOS')
         MUN_def = dict(zip(mun_def, mun_def))
         options = [ {"label": MUN_def[x], "value":x}for x in MUN_def ]
@@ -572,13 +578,30 @@ def make_count_figure(CCAA_types, PROV_types,municipio_types,partida_de_coste_ty
     elif partida_de_coste_types == 'TODOS' and municipio_types != 'TODOS':
         cohorte = df_final_pob.loc[df_final_pob['Nombre Ente Principal'] == municipio_types , 'cohorte_pob'].unique().to_list()[0]
 
-        fig.update_layout(title=f'Coste Mediano por Habitante Total, Municipios con {cohorte} Hab.')
+        fig.update_layout(title=f'Coste Mediano por Habitante Total')
+        fig.update_layout(xaxis=dict(title=f'Municipios con {cohorte} Hab.'))
+
+
+
+        # fig.add_annotation( x=2 , y=5 , xref="x" ,  yref="y" , text="max=5" ,showarrow=True ,
+        #     font=dict(
+        #         family="Courier New, monospace" ,
+        #         size=16 ,
+        #         color="#ffffff"
+        #     ) ,  align="center" , arrowhead=2 , arrowsize=1 , arrowwidth=2 , arrowcolor="#636363" , ax=20 , ay=-30 ,
+        #     bordercolor="#c7c7c7" ,
+        #     borderwidth=2 ,
+        #     borderpad=4 ,
+        #     bgcolor="#ff7f0e" ,
+        #     opacity=0.8
+        # )
 
 
     elif partida_de_coste_types != 'TODOS' and municipio_types != 'TODOS':
         cohorte = df_final_pob_melt_PC.loc[
             df_final_pob_melt_PC['Nombre Ente Principal'] == municipio_types , 'cohorte_pob'].unique().to_list()[0]
-        fig.update_layout(title=f'Coste Mediano por Habitante Total, Municipios con {cohorte} Hab., {partida_de_coste_types}')
+        fig.update_layout(title=f'Coste Mediano por Habitante Total, {partida_de_coste_types}')
+        fig.update_layout(xaxis=dict(title=f'Municipios con {cohorte} Hab.'))
 
     else:
         fig.update_layout(title=f'Coste por Habitante, {partida_de_coste_types}')
@@ -998,8 +1021,8 @@ def make_map_figure(CCAA_types, PROV_types,municipio_types,partida_de_coste_type
             median = df['PC_TOTAL'].median()
             df_zoom_po=df_zoom_pob
             df_zoom_po=df_zoom_po[df_zoom_po['CCAA']==CCAA_types]
-            df_zoom_po.to_file('./data/processed/shapefiles_espana_municipiosCCAA.geojson' , driver='GeoJSON')
-            with open('./data/processed/shapefiles_espana_municipiosCCAA.geojson') as response:
+            df_zoom_po.to_file('./data/main_temp/shapefiles_espana_municipiosCCAA.geojson' , driver='GeoJSON')
+            with open('./data/main_temp/shapefiles_espana_municipiosCCAA.geojson') as response:
                 countiesCCAA = json.load(response)
 
 
@@ -1045,8 +1068,8 @@ def make_map_figure(CCAA_types, PROV_types,municipio_types,partida_de_coste_type
             median = df['PC_TOTAL'].median()
             df_zoom_po = df_zoom_pob
             df_zoom_po = df_zoom_po[df_zoom_po['Provincia'] == PROV_types]
-            df_zoom_po.to_file('./data/processed/shapefiles_espana_municipiosPROV.geojson' , driver='GeoJSON')
-            with open('./data/processed/shapefiles_espana_municipiosPROV.geojson') as response:
+            df_zoom_po.to_file('./data/main_temp/shapefiles_espana_municipiosPROV.geojson' , driver='GeoJSON')
+            with open('./data/main_temp/shapefiles_espana_municipiosPROV.geojson') as response:
                 countiesPROV = json.load(response)
 
             fig = px.choropleth_mapbox(df , geojson=countiesPROV , locations='codigo_geo' , color='PC_TOTAL' ,
@@ -1097,8 +1120,8 @@ def make_map_figure(CCAA_types, PROV_types,municipio_types,partida_de_coste_type
             median = df['PC_TOTAL'].median()
             df_zoom_po = df_zoom_pob
             df_zoom_po = df_zoom_po[df_zoom_po['Provincia'] == PROV_types]
-            df_zoom_po.to_file('./data/processed/shapefiles_espana_municipiosPROV.geojson' , driver='GeoJSON')
-            with open('./data/processed/shapefiles_espana_municipiosPROV.geojson') as response:
+            df_zoom_po.to_file('./data/main_temp/shapefiles_espana_municipiosPROV.geojson' , driver='GeoJSON')
+            with open('./data/main_temp/shapefiles_espana_municipiosPROV.geojson') as response:
                 countiesPROV = json.load(response)
 
             fig = px.choropleth_mapbox(df , geojson=countiesPROV , locations='codigo_geo' , color='PC_TOTAL' ,
@@ -1144,8 +1167,8 @@ def make_map_figure(CCAA_types, PROV_types,municipio_types,partida_de_coste_type
             median = df['PC_TOTAL'].median()
             df_zoom_po = df_zoom_pob
             df_zoom_po = df_zoom_po[df_zoom_po['Provincia'] == PROV]
-            df_zoom_po.to_file('./data/processed/shapefiles_espana_municipiosPROV.geojson' , driver='GeoJSON')
-            with open('./data/processed/shapefiles_espana_municipiosPROV.geojson') as response:
+            df_zoom_po.to_file('./data/main_temp/shapefiles_espana_municipiosPROV.geojson' , driver='GeoJSON')
+            with open('./data/main_temp/shapefiles_espana_municipiosPROV.geojson') as response:
                 countiesPROV = json.load(response)
 
             fig = px.choropleth_mapbox(df , geojson=countiesPROV , locations='codigo_geo' , color='PC_TOTAL' ,
@@ -1253,8 +1276,8 @@ def make_map_figure(CCAA_types, PROV_types,municipio_types,partida_de_coste_type
             median = df['coste_efectivo_PC'].median()
             df_zoom_po = df_zoom_pob
             df_zoom_po = df_zoom_po[df_zoom_po['CCAA'] == CCAA_types]
-            df_zoom_po.to_file('./data/processed/shapefiles_espana_municipiosCCAA.geojson' , driver='GeoJSON')
-            with open('./data/processed/shapefiles_espana_municipiosCCAA.geojson') as response:
+            df_zoom_po.to_file('./data/main_temp/shapefiles_espana_municipiosCCAA.geojson' , driver='GeoJSON')
+            with open('./data/main_temp/shapefiles_espana_municipiosCCAA.geojson') as response:
                 countiesCCAA = json.load(response)
 
             fig = px.choropleth_mapbox(df , geojson=countiesCCAA , locations='codigo_geo' , color='coste_efectivo_PC' ,
@@ -1301,8 +1324,8 @@ def make_map_figure(CCAA_types, PROV_types,municipio_types,partida_de_coste_type
             median = df['coste_efectivo_PC'].median()
             df_zoom_po = df_zoom_pob
             df_zoom_po = df_zoom_po[df_zoom_po['Provincia'] == PROV_types]
-            df_zoom_po.to_file('./data/processed/shapefiles_espana_municipiosPROV.geojson' , driver='GeoJSON')
-            with open('./data/processed/shapefiles_espana_municipiosPROV.geojson') as response:
+            df_zoom_po.to_file('./data/main_temp/shapefiles_espana_municipiosPROV.geojson' , driver='GeoJSON')
+            with open('./data/main_temp/shapefiles_espana_municipiosPROV.geojson') as response:
                 countiesPROV = json.load(response)
 
             fig = px.choropleth_mapbox(df , geojson=countiesPROV , locations='codigo_geo' , color='coste_efectivo_PC' ,
@@ -1348,8 +1371,8 @@ def make_map_figure(CCAA_types, PROV_types,municipio_types,partida_de_coste_type
             median = df['coste_efectivo_PC'].median()
             df_zoom_po = df_zoom_pob
             df_zoom_po = df_zoom_po[df_zoom_po['Provincia'] == PROV_types]
-            df_zoom_po.to_file('./data/processed/shapefiles_espana_municipiosPROV.geojson' , driver='GeoJSON')
-            with open('./data/processed/shapefiles_espana_municipiosPROV.geojson') as response:
+            df_zoom_po.to_file('./data/main_temp/shapefiles_espana_municipiosPROV.geojson' , driver='GeoJSON')
+            with open('./data/main_temp/shapefiles_espana_municipiosPROV.geojson') as response:
                 countiesPROV = json.load(response)
 
             fig = px.choropleth_mapbox(df , geojson=countiesPROV , locations='codigo_geo' , color='coste_efectivo_PC' ,
@@ -1396,8 +1419,8 @@ def make_map_figure(CCAA_types, PROV_types,municipio_types,partida_de_coste_type
             median = df['coste_efectivo_PC'].median()
             df_zoom_po = df_zoom_pob
             df_zoom_po = df_zoom_po[df_zoom_po['Provincia'] == PROV]
-            df_zoom_po.to_file('./data/processed/shapefiles_espana_municipiosPROV.geojson' , driver='GeoJSON')
-            with open('./data/processed/shapefiles_espana_municipiosPROV.geojson') as response:
+            df_zoom_po.to_file('./data/main_temp/shapefiles_espana_municipiosPROV.geojson' , driver='GeoJSON')
+            with open('./data/main_temp/shapefiles_espana_municipiosPROV.geojson') as response:
                 countiesPROV = json.load(response)
 
             fig = px.choropleth_mapbox(df , geojson=countiesPROV , locations='codigo_geo' , color='coste_efectivo_PC' ,
