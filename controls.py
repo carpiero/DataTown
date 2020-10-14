@@ -13,11 +13,21 @@ df_final_pob_melt = pd.read_parquet('./data/main_processed/df_final_pob_melt.par
 df_final_pob_melt_PC = pd.read_parquet('./data/main_processed/df_final_pob_melt_PC.parquet')
 df_indicadores_pob_pivot = pd.read_parquet('./data/main_processed/df_indicadores_pob_pivot.parquet')
 
+########## dropdown
+
 df_final_pob_dropdown=pd.read_parquet('./data/main_processed/df_final_pob_dropdown.parquet')
 df_final_pob_dropdown_c=pd.read_parquet('./data/main_processed/df_final_pob_dropdown_c.parquet')
 
+######### text
 
-df_final_pob_melt_PC['Descripción'] = df_final_pob_melt_PC['Descripción'].str.replace(r'^...' , '')
+df_final_pob_poblaciontext=pd.read_parquet('./data/main_processed/df_final_pob_poblaciontext.parquet')
+
+
+
+
+#################
+
+# df_final_pob_melt_PC['Descripción'] = df_final_pob_melt_PC['Descripción'].str.replace(r'^...' , '')
 
 
 CCAA=sorted(df_final_pob['CCAA'].unique().to_list())
@@ -118,7 +128,7 @@ MUNI_CO = pd.read_parquet('./data/main_processed/MUNI_CO.parquet')
 
 df_zoom_pob = geopandas.read_file('./data/main_raw/shapefiles_espana_municipios.geojson')
 
-df_muni_co_zoom=df_final_pob[['CCAA','Provincia','Nombre Ente Principal','codigo_geo']]
+df_muni_co_zoom=df_final_pob[['CCAA','Provincia','Nombre Ente Principal','codigo_geo','Población 2018']]
 df_muni_co_zoom[df_muni_co_zoom.select_dtypes(['category']).columns] = \
             df_muni_co_zoom.select_dtypes(['category']).apply(lambda x: x.astype('object'))
 

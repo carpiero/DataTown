@@ -174,6 +174,7 @@ def get_tables(df_coste,df_indicadores):
 
 
 #########################
+    df_indicadores_pob=df_indicadores_pob.loc[df_indicadores_pob['Nº unidades']>0]
 
     df_final_pob.to_parquet('./data/main_processed/df_final_pob.parquet')
     df_indicadores_pob.to_parquet('./data/main_processed/df_indicadores_pob.parquet')
@@ -185,6 +186,9 @@ def get_tables(df_coste,df_indicadores):
     vars_melt=df_final_pob.columns[0:5].to_list()+df_final_pob.columns[95:96].to_list()+df_final_pob.columns[96:97].to_list()
     df_final_pob_melt=pd.melt(df_final_pob, id_vars=vars_melt,value_vars=df_final_pob.columns[5:48],
             var_name='Descripción',value_name='coste_efectivo')
+    df_final_pob_melt['Descripción'] = df_final_pob_melt['Descripción'].astype('category')
+
+    df_final_pob_melt=df_final_pob_melt.loc[df_final_pob_melt['coste_efectivo'] > 0]
 
     df_final_pob_melt.to_parquet('./data/main_processed/df_final_pob_melt.parquet')
 
@@ -195,6 +199,10 @@ def get_tables(df_coste,df_indicadores):
 
     df_pob_melt_PC = df_final_pob[['Código Ente Principal' , 'Población 2018']]
     df_final_pob_melt_PC = pd.merge(df_final_pob_melt_PC , df_pob_melt_PC , on='Código Ente Principal' , how='left')
+    df_final_pob_melt_PC['Descripción'] = df_final_pob_melt_PC['Descripción'].str.replace(r'^...' , '')
+    df_final_pob_melt_PC['Descripción'] = df_final_pob_melt_PC['Descripción'].astype('category')
+
+    df_final_pob_melt_PC=df_final_pob_melt_PC.loc[df_final_pob_melt_PC['coste_efectivo_PC'] > 0]
 
     df_final_pob_melt_PC.to_parquet('./data/main_processed/df_final_pob_melt_PC.parquet')
 

@@ -18,7 +18,7 @@ warnings.filterwarnings('ignore')
 
 #####   controls
 from controls import  CCAA_dict, PROV,  MUNICIPIOS, PDC, df_final_pob_melt, df_final_pob, df_indicadores_pob, df_final_pob_dropdown,\
-    df_final_pob_dropdown_c, df_final_pob_melt_PC, df_table_c, df_table_n, df_table_p, df_table_m,  df_n, df_c, df_p, df_count_c, df_count_c_pc, df_count_p, df_count_p_pc, \
+    df_final_pob_dropdown_c, df_final_pob_poblaciontext, df_final_pob_melt_PC, df_table_c, df_table_n, df_table_p, df_table_m,  df_n, df_c, df_p, df_count_c, df_count_c_pc, df_count_p, df_count_p_pc, \
     counties, CCAA_CO, PROV_CO, MUNI_CO, df_zoom_pob
 
 #################  change data
@@ -289,16 +289,16 @@ def display_status(CCAA_types, PROV_types,municipio_types):
 )
 def update_text(CCAA_types, PROV_types,municipio_types ):
     if CCAA_types == 'TODAS' and PROV_types == 'TODAS' and municipio_types == 'TODOS':
-        value=df_final_pob['Población 2018'].sum()
+        value=df_final_pob_poblaciontext['Población 2018'].sum()
 
     elif CCAA_types != 'TODAS' and PROV_types == 'TODAS' and municipio_types == 'TODOS':
-        value = df_final_pob.loc[df_final_pob['CCAA'] == CCAA_types,'Población 2018'].sum()
+        value = df_final_pob_poblaciontext.loc[df_final_pob_poblaciontext['CCAA'] == CCAA_types,'Población 2018'].sum()
 
     elif PROV_types != 'TODAS' and municipio_types == 'TODOS':
-        value = df_final_pob.loc[df_final_pob['Provincia']==PROV_types,'Población 2018'].sum()
+        value = df_final_pob_poblaciontext.loc[df_final_pob_poblaciontext['Provincia']==PROV_types,'Población 2018'].sum()
 
     else:
-        value=df_final_pob.loc[df_final_pob['Nombre Ente Principal'] == municipio_types,'Población 2018'].sum()
+        value=df_final_pob_poblaciontext.loc[df_final_pob_poblaciontext['Nombre Ente Principal'] == municipio_types,'Población 2018'].sum()
 
     value=locale.format_string('%.0f', value, True)
 
@@ -981,29 +981,35 @@ def make_map_figure(CCAA_types, PROV_types,municipio_types,partida_de_coste_type
         #                                           ticktext=[min,median,max]))
 
         if CCAA_types == 'TODAS' and PROV_types == 'TODAS' and municipio_types == 'TODOS':
-            df = df_final_pob
-            # df['Población'] = df['Población 2018']
-            # df['PC_TOTAL'] = df.apply(lambda new: round(new['PC_TOTAL'] , 0) , axis=1)
-            # q9 = df['PC_TOTAL'].quantile(0.90)
-            # q1 = df['PC_TOTAL'].quantile(0.10)
-            # max = df['PC_TOTAL'].max()
-            # min = df['PC_TOTAL'].min()
-            # median = df['PC_TOTAL'].median()
-            #
-            # fig = px.choropleth_mapbox(df , geojson=counties , locations='codigo_geo' , color='PC_TOTAL' ,
-            #                            color_continuous_scale="haline" ,
-            #                            range_color=(q1 , q9) ,
-            #                            mapbox_style="carto-positron" ,
-            #                            featureidkey="properties.f_codmun" ,
-            #                            zoom=4.5 , center={"lat": 39.8 , "lon": -4.3} ,
-            #                            opacity=0.5 , labels={'PC_TOTAL': 'Coste por habitante'} ,
-            #                            hover_name='Nombre Ente Principal' , hover_data={'codigo_geo': False ,
-            #                                                                             'Población': ':,' ,
-            #                                                                             'PC_TOTAL': ":,€"} ,
-            #                            )
-            #
-            # fig.update_layout(coloraxis_colorbar=dict(tickmode='array' , tickvals=[q1 , (q9 + q1) / 2 , q9] ,
-            #                                           ticktext=[min , median , max]))
+            df = df_final_pob[df_final_pob['Población 2018']>5000]
+            df['Población'] = df['Población 2018']
+            df['PC_TOTAL'] = df.apply(lambda new: round(new['PC_TOTAL'] , 0) , axis=1)
+            q9 = df['PC_TOTAL'].quantile(0.90)
+            q1 = df['PC_TOTAL'].quantile(0.10)
+            max = df['PC_TOTAL'].max()
+            min = df['PC_TOTAL'].min()
+            median = df['PC_TOTAL'].median()
+
+            df_zoom_po = df_zoom_pob
+            df_zoom_po = df_zoom_po[df_zoom_po['Población 2018']>5000]
+            df_zoom_po.to_file('./data/main_temp/shapefiles_espana_municipiosCCAA.geojson' , driver='GeoJSON')
+            with open('./data/main_temp/shapefiles_espana_municipiosCCAA.geojson') as response:
+                countiesNN = json.load(response)
+
+            fig = px.choropleth_mapbox(df , geojson=countiesNN , locations='codigo_geo' , color='PC_TOTAL' ,
+                                       color_continuous_scale="haline" ,
+                                       range_color=(q1 , q9) ,
+                                       mapbox_style="carto-positron" ,
+                                       featureidkey="properties.f_codmun" ,
+                                       zoom=4.5 , center={"lat": 39.8 , "lon": -4.3} ,
+                                       opacity=0.5 , labels={'PC_TOTAL': 'Coste por habitante'} ,
+                                       hover_name='Nombre Ente Principal' , hover_data={'codigo_geo': False ,
+                                                                                        'Población': ':,' ,
+                                                                                        'PC_TOTAL': ":,€"} ,
+                                       )
+
+            fig.update_layout(coloraxis_colorbar=dict(tickmode='array' , tickvals=[q1 , (q9 + q1) / 2 , q9] ,
+                                                      ticktext=[min , median , max]))
 
 
 
@@ -1234,7 +1240,7 @@ def make_map_figure(CCAA_types, PROV_types,municipio_types,partida_de_coste_type
         #                                           ticktext=[min , median , max]))
 
         if CCAA_types == 'TODAS' and PROV_types == 'TODAS' and municipio_types == 'TODOS':
-            df = df_final_pob_melt_PC
+            df = df_final_pob_melt_PC[df_final_pob_melt_PC['Población 2018']>5000]
             df['Población'] = df['Población 2018']
             df['coste_efectivo_PC'] = df.apply(lambda new: round(new['coste_efectivo_PC'] , 0) , axis=1)
             df= df.loc[(df['Descripción']==partida_de_coste_types)& (df['coste_efectivo_PC'] >= 1)]
@@ -1244,9 +1250,15 @@ def make_map_figure(CCAA_types, PROV_types,municipio_types,partida_de_coste_type
             min = df['coste_efectivo_PC'].min()
             median = df['coste_efectivo_PC'].median()
 
+            df_zoom_po = df_zoom_pob
+            df_zoom_po = df_zoom_po[df_zoom_po['Población 2018'] > 5000]
+            df_zoom_po.to_file('./data/main_temp/shapefiles_espana_municipiosCCAA.geojson' , driver='GeoJSON')
+            with open('./data/main_temp/shapefiles_espana_municipiosCCAA.geojson') as response:
+                countiesNN = json.load(response)
 
 
-            fig = px.choropleth_mapbox(df , geojson=counties , locations='codigo_geo' , color='coste_efectivo_PC' ,
+
+            fig = px.choropleth_mapbox(df , geojson=countiesNN , locations='codigo_geo' , color='coste_efectivo_PC' ,
                                        color_continuous_scale="haline" ,
                                        range_color=(q1 , q9) ,
                                        mapbox_style="carto-positron" ,

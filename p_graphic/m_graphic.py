@@ -17,3 +17,20 @@ def graphic():
 
     df_final_pob_dropdown_c.to_parquet('./data/main_processed/df_final_pob_dropdown_c.parquet')
 
+
+########   Población Text
+
+    df_final_pob_poblaciontext=df_final_pob[['CCAA','Provincia','Nombre Ente Principal','Población 2018']]
+    df_final_pob_poblaciontext.to_parquet('./data/main_processed/df_final_pob_poblaciontext.parquet')
+
+
+
+
+
+
+
+
+
+
+
+
