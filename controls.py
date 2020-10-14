@@ -5,6 +5,7 @@ df_indicadores_pob = pd.read_parquet(f'./data/processed/df_indicadores_pob.parqu
 df_final_pob = pd.read_parquet('./data/processed/df_final_pob.parquet')
 df_final_pob_melt = pd.read_parquet('./data/processed/df_final_pob_melt.parquet')
 df_final_pob_melt_PC = pd.read_parquet('./data/processed/df_final_pob_melt_PC.parquet')
+df_indicadores_pob_pivot = pd.read_parquet('./data/processed/df_indicadores_pob_pivot.parquet')
 
 
 CCAA=sorted(df_final_pob['CCAA'].unique().to_list())
@@ -41,9 +42,7 @@ df_table_p=df_indicadores_pob.pivot_table(index=['Provincia','Descripción' , 'U
                                                       values=['Nº unidades'] ,
                                                       aggfunc=sum).reset_index()
 
-# df_table_m=df_indicadores_pob.pivot_table(index=['Nombre Ente Principal','Descripción' , 'Unidades físicas de referencia'] ,
-#                                                       values=['Nº unidades'] ,
-#                                                       aggfunc=sum).reset_index()
+df_table_m=df_indicadores_pob_pivot
 
 
 ###########################   individual graph

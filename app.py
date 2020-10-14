@@ -15,7 +15,7 @@ import plotly.graph_objects as go
 
 #####   controls
 from controls import  CCAA_dict, PROV,  MUNICIPIOS, PDC, df_final_pob_melt, df_final_pob, df_indicadores_pob, \
-    df_final_pob_melt_PC, df_table_c, df_table_n, df_table_p,  df_n, df_c, df_p, df_count_c, df_count_c_pc, df_count_p, df_count_p_pc, \
+    df_final_pob_melt_PC, df_table_c, df_table_n, df_table_p, df_table_m,  df_n, df_c, df_p, df_count_c, df_count_c_pc, df_count_p, df_count_p_pc, \
     counties, CCAA_CO, PROV_CO, MUNI_CO, df_zoom_pob
 
 #################  change data
@@ -566,8 +566,19 @@ def make_count_figure(CCAA_types, PROV_types,municipio_types,partida_de_coste_ty
     fig.update_traces(texttemplate="%{y:,} €/h" , textposition='inside',marker_line_color='rgb(8,48,107)',
                       marker_color=['rgb(55, 83, 109)', 'rgb(55, 83, 109)', 'rgb(217, 95, 2)', 'rgb(26, 118, 255)', 'rgb(26, 118, 255)'])
 
-    if partida_de_coste_types == 'TODOS':
+    if partida_de_coste_types == 'TODOS' and municipio_types == 'TODOS':
         fig.update_layout(title=f'Coste por Habitante Total' )
+
+    elif partida_de_coste_types == 'TODOS' and municipio_types != 'TODOS':
+        cohorte = df_final_pob.loc[df_final_pob['Nombre Ente Principal'] == municipio_types , 'cohorte_pob'].unique().to_list()[0]
+
+        fig.update_layout(title=f'Coste Mediano por Habitante Total, Municipios con {cohorte} Hab.')
+
+
+    elif partida_de_coste_types != 'TODOS' and municipio_types != 'TODOS':
+        cohorte = df_final_pob_melt_PC.loc[
+            df_final_pob_melt_PC['Nombre Ente Principal'] == municipio_types , 'cohorte_pob'].unique().to_list()[0]
+        fig.update_layout(title=f'Coste Mediano por Habitante Total, Municipios con {cohorte} Hab., {partida_de_coste_types}')
 
     else:
         fig.update_layout(title=f'Coste por Habitante, {partida_de_coste_types}')
@@ -751,7 +762,7 @@ def make_main_figure(CCAA_types, PROV_types,municipio_types,partida_de_coste_typ
 
 
         elif municipio_types != 'TODOS':
-            df_table=df_indicadores_pob
+            df_table=df_table_m
             df_table= df_table.loc[(df_table['Descripción']==partida_de_coste_types)&\
                            (df_table['Nombre Ente Principal']==municipio_types)&\
                             (df_table['Nº unidades']>0)]
@@ -898,7 +909,7 @@ def make_individual_figure(CCAA_types, PROV_types,municipio_types, main_graph):
                           ) ,
 
                           legend=dict(
-                              x=0.50 ,
+                              x=0.40 ,
                               y=0.9 ,
                               bgcolor='rgba(255, 255, 255, 0)' ,
                               bordercolor='rgba(255, 255, 255, 0)',
