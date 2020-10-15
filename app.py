@@ -20,7 +20,7 @@ warnings.filterwarnings('ignore')
 from controls import  CCAA_dict, PROV,  MUNICIPIOS, PDC, df_final_pob_melt, df_final_pob, df_indicadores_pob, df_final_pob_dropdown,\
     df_final_pob_dropdown_c, df_final_pob_poblaciontext, df_final_pob_melt_PC, df_table_c, df_table_n, df_table_p, df_table_m,  df_n, \
     df_c, df_p, df_count_c, df_count_cn, df_count_c_pc, df_count_p, df_count_p_pc, df_count_c_new_n, df_count_p_new_n,\
-    counties, CCAA_CO, PROV_CO, MUNI_CO, df_zoom_pob, df_final_pob_round, df_final_pob_round_melt_PC
+    counties, CCAA_CO, PROV_CO, MUNI_CO, df_zoom_pob, df_final_pob_round, df_final_pob_round_melt_PC, df_final_pob_round_melt_PC_object
 
 #################  change data
 
@@ -75,7 +75,7 @@ app.layout = html.Div(
                                     style={"margin-bottom": "0px"},
                                 ),
                                 html.H5(
-                                    "Coste efectivo", style={"margin-top": "0px"}
+                                    "Coste efectivo 2018", style={"margin-top": "0px"}
                                 ),
                             ]
                         )
@@ -499,7 +499,7 @@ def make_count_figure(CCAA_types, PROV_types,municipio_types,partida_de_coste_ty
             df2.drop_duplicates(subset='PC_TOTAL' , keep='last' , inplace=True)
             df2 = df2.append(df.loc[df['Nombre Ente Principal'] == municipio_types])
             df = df2
-            df['PC_TOTAL'] = df.apply(lambda new: round(new['PC_TOTAL'] , ) , axis=1)
+            df['PC_TOTAL'] = round(df['PC_TOTAL'] , )
             df.iloc[3 , 0] = f'{municipio_types}.'
 
             fig = go.Figure()
@@ -521,7 +521,7 @@ def make_count_figure(CCAA_types, PROV_types,municipio_types,partida_de_coste_ty
             df2=df2.sort_values(by='PC_TOTAL' , ascending=False)
 
             df2=df2.append(df.loc[df['PC_TOTAL'] == df['PC_TOTAL'].quantile(0.50 , interpolation='nearest')])
-            df2['PC_TOTAL'] = df2.apply(lambda new: round(new['PC_TOTAL'] , ) , axis=1)
+            df2['PC_TOTAL'] = round(df2['PC_TOTAL'] , )
 
 
             fig = go.Figure()
@@ -541,7 +541,7 @@ def make_count_figure(CCAA_types, PROV_types,municipio_types,partida_de_coste_ty
             df2 = df2.sort_values(by='PC_TOTAL' , ascending=False)
 
             df2 = df2.append(df.loc[df['CCAA'] == CCAA_types])
-            df2['PC_TOTAL'] = df2.apply(lambda new: round(new['PC_TOTAL'] , ) , axis=1)
+            df2['PC_TOTAL'] = round(df2['PC_TOTAL'] , )
             df2.iloc[3,0] = f'{CCAA_types}.'
 
             fig = go.Figure()
@@ -560,7 +560,7 @@ def make_count_figure(CCAA_types, PROV_types,municipio_types,partida_de_coste_ty
             df2 = df2.sort_values(by='PC_TOTAL' , ascending=False)
 
             df2 = df2.append(df.loc[df['Provincia'] == PROV_types])
-            df2['PC_TOTAL'] = df2.apply(lambda new: round(new['PC_TOTAL'] , ) , axis=1)
+            df2['PC_TOTAL'] = round(df2['PC_TOTAL'] , )
             df2.iloc[3 , 0] = f'{PROV_types}.'
 
             fig = go.Figure()
@@ -581,7 +581,7 @@ def make_count_figure(CCAA_types, PROV_types,municipio_types,partida_de_coste_ty
             df2 = df2.sort_values(by='PC_TOTAL' , ascending=False)
 
             df2 = df2.append(df.loc[df['Provincia'] == PROV_types])
-            df2['PC_TOTAL'] = df2.apply(lambda new: round(new['PC_TOTAL'] , ) , axis=1)
+            df2['PC_TOTAL'] = round(df2['PC_TOTAL'] , )
             df2.iloc[3 , 0] = f'{PROV_types}.'
 
             fig = go.Figure()
@@ -605,14 +605,14 @@ def make_count_figure(CCAA_types, PROV_types,municipio_types,partida_de_coste_ty
             df = df2.append(df.loc[df['Nombre Ente Principal'] == municipio_types])
 
             df.iloc[3 , 0] = f'{municipio_types}.'
-            df['coste_efectivo_PC'] = df.apply(lambda new: round(new['coste_efectivo_PC'] , ) , axis=1)
+            df['coste_efectivo_PC'] = round(df['coste_efectivo_PC'] , )
 
             fig = go.Figure()
             fig.add_trace(go.Bar(x=df['Nombre Ente Principal'] , y=df['coste_efectivo_PC']))
             fig.update_layout(xaxis=dict(title=f'Percentil 75                        Mediana                     Percentil 25                       Elección'))
             fig.update_layout(title=f'Coste Mediano por hab. Partida seleccionada, Municipios con {cohorte} hab.')
 
-    fig.update_traces(texttemplate="%{y:,} €/h" , textposition='inside',marker_line_color='rgb(8,48,107)',
+    fig.update_traces(texttemplate="%{y:,} €/h" , textposition='inside',marker_line_color='rgb(8,48,107)',textfont_size=13,
                       marker_color=['#D62728', '#3366CC',  '#2CA02C', 'rgb(217, 95, 2)'])
 
 
@@ -864,7 +864,7 @@ def make_individual_figure(CCAA_types, PROV_types,municipio_types, main_graph):
 
         div = df_final_pob.loc[df_final_pob['CCAA'] == CCAA_types , 'Población 2018'].sum()
         df2 = df2.loc[df2['CCAA'] == CCAA_types]
-        df2['coste_efectivo_new'] = df2.apply(lambda new: round(new['coste_efectivo'] / div,0) , axis=1)
+        df2['coste_efectivo_new'] = round(df2['coste_efectivo'] / div,)
 
 
         fig = go.Figure()
@@ -879,13 +879,13 @@ def make_individual_figure(CCAA_types, PROV_types,municipio_types, main_graph):
         df = df_p
         div = df_final_pob.loc[df_final_pob['Provincia'] == PROV_types , 'Población 2018'].sum()
         df = df.loc[df['Provincia'] == PROV_types]
-        df['coste_efectivo_new'] = df.apply(lambda new: round(new['coste_efectivo'] / div,0) , axis=1)
+        df['coste_efectivo_new'] = round(df['coste_efectivo'] / div,)
 
 
         df2 = df_c
         div = df_final_pob.loc[df_final_pob['CCAA'] == CCAA_types , 'Población 2018'].sum()
         df2 = df2.loc[df2['CCAA'] == CCAA_types]
-        df2['coste_efectivo_new'] = df2.apply(lambda new: round(new['coste_efectivo'] / div,0) , axis=1)
+        df2['coste_efectivo_new'] = round(df2['coste_efectivo'] / div,)
 
 
         fig = go.Figure()
@@ -899,7 +899,7 @@ def make_individual_figure(CCAA_types, PROV_types,municipio_types, main_graph):
         df = df_p
         div = df_final_pob.loc[df_final_pob['Provincia'] == PROV_types , 'Población 2018'].sum()
         df = df.loc[df['Provincia'] == PROV_types]
-        df['coste_efectivo_new'] = df.apply(lambda new: round(new['coste_efectivo'] / div,0) , axis=1)
+        df['coste_efectivo_new'] = round(df['coste_efectivo'] / div,0)
 
 
         df2 = df_n
@@ -912,7 +912,7 @@ def make_individual_figure(CCAA_types, PROV_types,municipio_types, main_graph):
 
     else:
         df =df_final_pob_melt_PC.loc[df_final_pob_melt_PC['Nombre Ente Principal'] == municipio_types].sort_values(by='coste_efectivo_PC',ascending=False)
-        df['coste_efectivo_PC'] = df.apply(lambda new: round(new['coste_efectivo_PC'] , 0) , axis=1)
+        df['coste_efectivo_PC'] = round(df['coste_efectivo_PC'] , )
 
 
 
@@ -922,7 +922,7 @@ def make_individual_figure(CCAA_types, PROV_types,municipio_types, main_graph):
         df2 = df_final_pob_melt_PC.loc[ df_final_pob_melt_PC['coste_efectivo_PC'] > 0]
         df2 = df2.pivot_table(index=['cohorte_pob','Descripción'],values=['coste_efectivo_PC'],aggfunc=np.median).reset_index()
         df2= df2.loc[df2['cohorte_pob'] == cohorte]
-        df2['coste_efectivo_PC'] = df2.apply(lambda new: round(new['coste_efectivo_PC'] , 0) , axis=1)
+        df2['coste_efectivo_PC'] = round(df2['coste_efectivo_PC'] , )
 
 
         fig = go.Figure()
@@ -1215,7 +1215,7 @@ def make_map_figure(CCAA_types, PROV_types,municipio_types,partida_de_coste_type
 
         if CCAA_types == 'TODAS' and PROV_types == 'TODAS' and municipio_types == 'TODOS':
 
-            df = df_final_pob_round_melt_PC#[df_final_pob_round_melt_PC['Población']>5000]
+            df = df_final_pob_round_melt_PC_object#[df_final_pob_round_melt_PC['Población']>5000]
             # df['Población'] = df['Población 2018']
             df= df.loc[(df['Descripción']==partida_de_coste_types)& (df['coste_efectivo_PC'] > 0)]
             # df['coste_efectivo_PC'] = df.apply(lambda new: round(new['coste_efectivo_PC'] , ) , axis=1)
@@ -1225,15 +1225,18 @@ def make_map_figure(CCAA_types, PROV_types,municipio_types,partida_de_coste_type
             min = df['coste_efectivo_PC'].min()
             median = df['coste_efectivo_PC'].median()
 
-            # df_zoom_po = df_zoom_pob
-            # df_zoom_po = df_zoom_po[df_zoom_po['Población 2018'] > 5000]
-            # df_zoom_po.to_file('./data/main_temp/shapefiles_espana_municipiosCCAA.geojson' , driver='GeoJSON')
-            # with open('./data/main_temp/shapefiles_espana_municipiosCCAA.geojson') as response:
-            #     countiesNN = json.load(response)
+            df['codigo_geo'] = df['codigo_geo'].astype('int64')
+            df_zoom_po = df_zoom_pob
+            df_zoom_po = pd.merge(df_zoom_po , df , on='codigo_geo' , how='left' , suffixes=('' , '_y'))
+            df_zoom_po = df_zoom_po.loc[df_zoom_po['CCAA_y'].isnull() == False]
+
+            df_zoom_po.to_file('./data/main_temp/shapefiles_espana_municipiosCCAA_PC.geojson' , driver='GeoJSON')
+            with open('./data/main_temp/shapefiles_espana_municipiosCCAA_PC.geojson') as response:
+                countiesNN = json.load(response)
 
 
 
-            fig = px.choropleth_mapbox(df , geojson=counties , locations='codigo_geo' , color='coste_efectivo_PC' ,
+            fig = px.choropleth_mapbox(df , geojson=countiesNN , locations='codigo_geo' , color='coste_efectivo_PC' ,
                                        color_continuous_scale="haline" ,
                                        range_color=(q1 , q9) ,
                                        mapbox_style="carto-positron" ,
