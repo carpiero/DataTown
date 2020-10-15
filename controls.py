@@ -155,5 +155,11 @@ df_muni_co_zoom['codigo_geo'] = df_muni_co_zoom['codigo_geo'].astype('int64')
 df_zoom_pob['codigo_geo']= df_zoom_pob['f_codmun']
 df_zoom_pob = pd.merge(df_zoom_pob , df_muni_co_zoom, on='codigo_geo', how='left')
 
+df_final_pob_round = df_final_pob[['PC_TOTAL','codigo_geo','CCAA', 'Provincia', 'Nombre Ente Principal','Población 2018']]
+df_final_pob_round['Población'] = df_final_pob_round['Población 2018']
+df_final_pob_round['PC_TOTAL'] = round(df_final_pob_round['PC_TOTAL'],)
 
+df_final_pob_round_melt_PC = df_final_pob_melt_PC[['codigo_geo','CCAA', 'Provincia', 'Nombre Ente Principal','Población 2018','coste_efectivo_PC','Descripción']]
+df_final_pob_round_melt_PC['Población'] = df_final_pob_round_melt_PC['Población 2018']
+df_final_pob_round_melt_PC['coste_efectivo_PC'] = round(df_final_pob_round_melt_PC['coste_efectivo_PC'] , )
 
