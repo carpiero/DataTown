@@ -244,7 +244,7 @@ h5 {
   margin-top: 0.6rem;
 }
 h6 {
-  font-size: 1.50rem;
+  font-size: 1.60rem;
   line-height: 1.6;
   letter-spacing: 0;
   margin-bottom: 0.75rem;
@@ -257,7 +257,7 @@ p {
 }
 
 .mini_container p {
- font-size: 1.50rem;
+ font-size: 1.60rem;
   margin-top: 0;
 }
 
@@ -623,13 +623,13 @@ there.
     font-size: 2rem;
   }
   h6 {
-    font-size: 1.20rem;
+    font-size: 1.25rem;
   }
   p {
     font-size: 11px;
   }
   .mini_container p {
- font-size: 1.20rem;
+ font-size: 1.25rem;
   margin-top: 0;
 }
 

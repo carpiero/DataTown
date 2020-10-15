@@ -18,7 +18,8 @@ warnings.filterwarnings('ignore')
 
 #####   controls
 from controls import  CCAA_dict, PROV,  MUNICIPIOS, PDC, df_final_pob_melt, df_final_pob, df_indicadores_pob, df_final_pob_dropdown,\
-    df_final_pob_dropdown_c, df_final_pob_poblaciontext, df_final_pob_melt_PC, df_table_c, df_table_n, df_table_p, df_table_m,  df_n, df_c, df_p, df_count_c, df_count_c_pc, df_count_p, df_count_p_pc, \
+    df_final_pob_dropdown_c, df_final_pob_poblaciontext, df_final_pob_melt_PC, df_table_c, df_table_n, df_table_p, df_table_m,  df_n, \
+    df_c, df_p, df_count_c, df_count_cn, df_count_c_pc, df_count_p, df_count_p_pc, df_count_c_new_n, df_count_p_new_n,\
     counties, CCAA_CO, PROV_CO, MUNI_CO, df_zoom_pob
 
 #################  change data
@@ -152,13 +153,13 @@ app.layout = html.Div(
                                 ) ,
                                 html.Div(
                                     [html.H6(id='Coste_efectivo_por_Habitante_text') ,
-                                     html.P("Coste por Habitante")] ,
+                                     html.P("Coste por habitante")] ,
                                     id="Coste_efectivo_por_Habitante" ,
                                     className="mini_container" ,
                                 ) ,
                                 html.Div(
                                     [html.H6(id="Coste_efectivo_Medio_por_Habitante_text") ,
-                                     html.P("Coste Medio por Habitante")] ,
+                                     html.P("Coste Medio por habitante nacional del sustrato")] ,
                                     id="Coste_efectivo_Medio_por_Habitante" ,
                                     className="mini_container" ,
                                 ),
@@ -444,63 +445,67 @@ def update_text(CCAA_types, PROV_types,municipio_types,partida_de_coste_types ):
 def make_count_figure(CCAA_types, PROV_types,municipio_types,partida_de_coste_types, main_graph):
     if partida_de_coste_types == 'TODOS':
         if CCAA_types == 'TODAS' and PROV_types == 'TODAS' and municipio_types == 'TODOS':
-            df = df_count_c
-            df = [df.head(2) , df[df_count_c.shape[0] // 2:(df.shape[0] // 2) + 1] ,df.tail(2)]
-            df = pd.concat(df , sort=True)
+            df = df_count_cn
 
 
             fig = go.Figure()
             fig.add_trace(go.Bar(x=df['CCAA'] , y=df['PC_TOTAL']))
+            fig.update_layout(xaxis=dict(title=f'Percentil 90                        Percentil 75                     Percentil 25                       Mediana'))
+            fig.update_layout(title=f'Coste por Habitante Total, Comunidades Autónomas')
 
         elif CCAA_types != 'TODAS' and PROV_types == 'TODAS' and municipio_types == 'TODOS':
-            df = df_count_c
-            df = [df.head(2) , df.loc[df['CCAA']==CCAA_types], df.tail(2)]
-            df = pd.concat(df)
-            df.iloc[2,0]=f'{CCAA_types}.'
+            df = df_count_c_new_n
+            df = df.append(df_count_c.loc[df_count_c['CCAA']==CCAA_types])
+            df.iloc[3,0]=f'{CCAA_types}.'
 
             fig = go.Figure()
             fig.add_trace(go.Bar(x=df['CCAA'] , y=df['PC_TOTAL']))
+            fig.update_layout(xaxis=dict(title=f'Percentil 75                        Mediana                     Percentil 25                       Elección'))
+            fig.update_layout(title=f'Coste por Habitante Total, Comunidades Autónomas')
 
         elif CCAA_types != 'TODAS' and PROV_types != 'TODAS' and municipio_types == 'TODOS':
-            df = df_count_p
+            df = df_count_p_new_n
+            df = df.append(df_count_p.loc[df_count_p['Provincia'] == PROV_types])
 
-            df = df.sort_values(by='PC_TOTAL', ascending=False)
-            df = [df.head(2) , df.loc[df['Provincia'] == PROV_types] ,df.tail(2)]
-            df = pd.concat(df)
-
-            df.iloc[2 , 0] = f'{PROV_types}.'
+            df.iloc[3 , 0] = f'{PROV_types}.'
 
 
             fig = go.Figure()
             fig.add_trace(go.Bar(x=df['Provincia'] , y=df['PC_TOTAL']))
+            fig.update_layout(xaxis=dict(title=f'Percentil 75                        Mediana                     Percentil 25                       Elección'))
+            fig.update_layout(title=f'Coste por Habitante Total, Provincias')
 
         elif CCAA_types == 'TODAS' and PROV_types != 'TODAS' and municipio_types == 'TODOS':
-            df = df_count_p
+            df = df_count_p_new_n
+            df = df.append(df_count_p.loc[df_count_p['Provincia'] == PROV_types])
 
-            df = df.sort_values(by='PC_TOTAL' , ascending=False)
-            df = [df.head(2) , df.loc[df['Provincia'] == PROV_types] , df.tail(2)]
-            df = pd.concat(df)
-
-            df.iloc[2 , 0] = f'{PROV_types}.'
+            df.iloc[3 , 0] = f'{PROV_types}.'
 
             fig = go.Figure()
             fig.add_trace(go.Bar(x=df['Provincia'] , y=df['PC_TOTAL']))
+            fig.update_layout(xaxis=dict(title=f'Percentil 75                        Mediana                     Percentil 25                       Elección'))
+            fig.update_layout(title=f'Coste por Habitante Total, Provincias')
 
         else:
             cohorte = df_final_pob.loc[df_final_pob['Nombre Ente Principal'] == municipio_types , 'cohorte_pob'].unique().to_list()[0]
 
             df = df_final_pob[['Nombre Ente Principal' , 'cohorte_pob' , 'PC_TOTAL']].loc[
-                (df_final_pob['cohorte_pob'] == cohorte) & (df_final_pob['PC_TOTAL'] > 1)].sort_values(by='PC_TOTAL' ,
-                                                                                                       ascending=False)
+                (df_final_pob['cohorte_pob'] == cohorte) & (df_final_pob['PC_TOTAL'] > 0)].sort_values(by='PC_TOTAL' ,ascending=False)
             df['Nombre Ente Principal'] = df['Nombre Ente Principal'].astype('object')
+            df2 = df.loc[(df['PC_TOTAL'] == df['PC_TOTAL'].quantile(0.75 , interpolation='nearest')) | \
+                         (df['PC_TOTAL'] == df['PC_TOTAL'].quantile(0.50 , interpolation='nearest')) | \
+                         (df['PC_TOTAL'] == df['PC_TOTAL'].quantile(0.25 , interpolation='nearest'))]
+
+            df2.drop_duplicates(subset='PC_TOTAL' , keep='last' , inplace=True)
+            df2 = df2.append(df.loc[df['Nombre Ente Principal'] == municipio_types])
+            df = df2
             df['PC_TOTAL'] = df.apply(lambda new: round(new['PC_TOTAL'] , ) , axis=1)
-            df = [df.head(2) , df.loc[df['Nombre Ente Principal'] == municipio_types] , df.tail(2)]
-            df = pd.concat(df)
-            df.iloc[2 , 0] = f'{municipio_types}.'
+            df.iloc[3 , 0] = f'{municipio_types}.'
 
             fig = go.Figure()
             fig.add_trace(go.Bar(x=df['Nombre Ente Principal'] , y=df['PC_TOTAL']))
-
+            fig.update_layout(xaxis=dict(title=f'Percentil 75                        Mediana                     Percentil 25                       Elección'))
+            fig.update_layout(title=f'Coste Mediano por Habitante Total, Municipios con {cohorte} Hab.')
 
 
 
@@ -508,102 +513,119 @@ def make_count_figure(CCAA_types, PROV_types,municipio_types,partida_de_coste_ty
         if CCAA_types == 'TODAS' and PROV_types == 'TODAS' and municipio_types == 'TODOS':
             df = df_count_c_pc
 
-            df = df.loc[df['Descripción'] == partida_de_coste_types].sort_values(by='PC_TOTAL' ,ascending=False)
-            df = [df.head(2) , df.tail(2) , df[df.shape[0] // 2:(df.shape[0] // 2) + 1]]
-            df = pd.concat(df).sort_values(by='PC_TOTAL' , ascending=False)
+            df = df.loc[df['Descripción'] == partida_de_coste_types].sort_values(by='PC_TOTAL' , ascending=False)
+
+            df2 = df.loc[(df['PC_TOTAL'] == df['PC_TOTAL'].quantile(0.90 , interpolation='nearest')) | \
+                        (df['PC_TOTAL'] == df['PC_TOTAL'].quantile(0.75 , interpolation='nearest')) | \
+                        (df['PC_TOTAL'] == df['PC_TOTAL'].quantile(0.25 , interpolation='nearest'))]
+            df2=df2.sort_values(by='PC_TOTAL' , ascending=False)
+
+            df2=df2.append(df.loc[df['PC_TOTAL'] == df['PC_TOTAL'].quantile(0.50 , interpolation='nearest')])
+            df2['PC_TOTAL'] = df2.apply(lambda new: round(new['PC_TOTAL'] , ) , axis=1)
 
 
             fig = go.Figure()
-            fig.add_trace(go.Bar(x=df['CCAA'] , y=df['PC_TOTAL']))
+            fig.add_trace(go.Bar(x=df2['CCAA'] , y=df2['PC_TOTAL']))
+            fig.update_layout(xaxis=dict(title=f'Percentil 90                        Percentil 75                     Percentil 25                       Mediana'))
+            fig.update_layout(title=f'Coste por Habitante Total, CCCAA, {partida_de_coste_types}')
+
 
         elif CCAA_types != 'TODAS' and PROV_types == 'TODAS' and municipio_types == 'TODOS':
             df = df_count_c_pc
 
             df = df.loc[df['Descripción'] == partida_de_coste_types].sort_values(by='PC_TOTAL' , ascending=False)
-            df = [df.head(2) , df.loc[df['CCAA']==CCAA_types], df.tail(2)]
-            df = pd.concat(df)
-            df.iloc[2,0] = f'{CCAA_types}.'
+
+            df2 = df.loc[(df['PC_TOTAL'] == df['PC_TOTAL'].quantile(0.75 , interpolation='nearest')) | \
+                         (df['PC_TOTAL'] == df['PC_TOTAL'].quantile(0.50 , interpolation='nearest')) | \
+                         (df['PC_TOTAL'] == df['PC_TOTAL'].quantile(0.25 , interpolation='nearest'))]
+            df2 = df2.sort_values(by='PC_TOTAL' , ascending=False)
+
+            df2 = df2.append(df.loc[df['CCAA'] == CCAA_types])
+            df2['PC_TOTAL'] = df2.apply(lambda new: round(new['PC_TOTAL'] , ) , axis=1)
+            df2.iloc[3,0] = f'{CCAA_types}.'
 
             fig = go.Figure()
-            fig.add_trace(go.Bar(x=df['CCAA'] , y=df['PC_TOTAL']))
+            fig.add_trace(go.Bar(x=df2['CCAA'] , y=df2['PC_TOTAL']))
+            fig.update_layout(xaxis=dict(title=f'Percentil 75                        Mediana                     Percentil 25                       Elección'))
+            fig.update_layout(title=f'Coste por Habitante Total, CCCAA, {partida_de_coste_types}')
 
         elif CCAA_types != 'TODAS' and PROV_types != 'TODAS' and municipio_types == 'TODOS':
             df = df_count_p_pc
 
             df = df.loc[df['Descripción'] == partida_de_coste_types].sort_values(by='PC_TOTAL' , ascending=False)
-            df = [df.head(2) , df.loc[df['Provincia'] == PROV_types] , df.tail(2)]
-            df = pd.concat(df)
-            df.iloc[2 , 0] = f'{PROV_types}.'
+
+            df2 = df.loc[(df['PC_TOTAL'] == df['PC_TOTAL'].quantile(0.75 , interpolation='nearest')) | \
+                         (df['PC_TOTAL'] == df['PC_TOTAL'].quantile(0.50 , interpolation='nearest')) | \
+                         (df['PC_TOTAL'] == df['PC_TOTAL'].quantile(0.25 , interpolation='nearest'))]
+            df2 = df2.sort_values(by='PC_TOTAL' , ascending=False)
+
+            df2 = df2.append(df.loc[df['Provincia'] == PROV_types])
+            df2['PC_TOTAL'] = df2.apply(lambda new: round(new['PC_TOTAL'] , ) , axis=1)
+            df2.iloc[3 , 0] = f'{PROV_types}.'
 
             fig = go.Figure()
-            fig.add_trace(go.Bar(x=df['Provincia'] , y=df['PC_TOTAL']))
+            fig.add_trace(go.Bar(x=df2['Provincia'] , y=df2['PC_TOTAL']))
+            fig.update_layout(xaxis=dict(title=f'Percentil 75                        Mediana                     Percentil 25                       Elección'))
+            fig.update_layout(title=f'Coste por Habitante Total, Provincias, {partida_de_coste_types}')
+
 
 
         elif CCAA_types == 'TODAS' and PROV_types != 'TODAS' and municipio_types == 'TODOS':
             df = df_count_p_pc
 
             df = df.loc[df['Descripción'] == partida_de_coste_types].sort_values(by='PC_TOTAL' , ascending=False)
-            df = [df.head(2) , df.loc[df['Provincia'] == PROV_types] , df.tail(2)]
-            df = pd.concat(df)
-            df.iloc[2 , 0] = f'{PROV_types}.'
+
+            df2 = df.loc[(df['PC_TOTAL'] == df['PC_TOTAL'].quantile(0.75 , interpolation='nearest')) | \
+                         (df['PC_TOTAL'] == df['PC_TOTAL'].quantile(0.50 , interpolation='nearest')) | \
+                         (df['PC_TOTAL'] == df['PC_TOTAL'].quantile(0.25 , interpolation='nearest'))]
+            df2 = df2.sort_values(by='PC_TOTAL' , ascending=False)
+
+            df2 = df2.append(df.loc[df['Provincia'] == PROV_types])
+            df2['PC_TOTAL'] = df2.apply(lambda new: round(new['PC_TOTAL'] , ) , axis=1)
+            df2.iloc[3 , 0] = f'{PROV_types}.'
 
             fig = go.Figure()
-            fig.add_trace(go.Bar(x=df['Provincia'] , y=df['PC_TOTAL']))
+            fig.add_trace(go.Bar(x=df2['Provincia'] , y=df2['PC_TOTAL']))
+            fig.update_layout(xaxis=dict(title=f'Percentil 75                        Mediana                     Percentil 25                       Elección'))
+            fig.update_layout(title=f'Coste por Habitante Total, Provincias, {partida_de_coste_types}')
 
         else:
-            cohorte = df_final_pob_melt_PC.loc[
-                df_final_pob_melt_PC['Nombre Ente Principal'] == municipio_types , 'cohorte_pob'].unique().to_list()[0]
+            cohorte = df_final_pob_melt_PC.loc[df_final_pob_melt_PC['Nombre Ente Principal'] == municipio_types , 'cohorte_pob'].unique().to_list()[0]
 
             df = df_final_pob_melt_PC[['Nombre Ente Principal' , 'cohorte_pob' , 'Descripción' , 'coste_efectivo_PC']].loc[
-                (df_final_pob_melt_PC['cohorte_pob'] == cohorte) & (df_final_pob_melt_PC['coste_efectivo_PC'] >= 1) & (
-                df_final_pob_melt_PC['Descripción'] == partida_de_coste_types)].sort_values(by='coste_efectivo_PC' , ascending=False)
+                (df_final_pob_melt_PC['cohorte_pob'] == cohorte)  & ( df_final_pob_melt_PC['Descripción'] == partida_de_coste_types)].sort_values(by='coste_efectivo_PC' , ascending=False)
             df['Nombre Ente Principal'] = df['Nombre Ente Principal'].astype('object')
+
+            df2 = df.loc[(df['coste_efectivo_PC'] == df['coste_efectivo_PC'].quantile(0.75 , interpolation='nearest')) | \
+                         (df['coste_efectivo_PC'] == df['coste_efectivo_PC'].quantile(0.50 , interpolation='nearest')) | \
+                         (df['coste_efectivo_PC'] == df['coste_efectivo_PC'].quantile(0.25 , interpolation='nearest'))]
+
+            df2 = df2.sort_values(by='coste_efectivo_PC' , ascending=False)
+            df2.drop_duplicates(subset='coste_efectivo_PC' , keep='last' , inplace=True)
+            df = df2.append(df.loc[df['Nombre Ente Principal'] == municipio_types])
+
+            df.iloc[3 , 0] = f'{municipio_types}.'
             df['coste_efectivo_PC'] = df.apply(lambda new: round(new['coste_efectivo_PC'] , ) , axis=1)
-            df = [df.head(2) , df.loc[df['Nombre Ente Principal'] == municipio_types] , df.tail(2)]
-            df = pd.concat(df)
-            df.iloc[2 , 0] = f'{municipio_types}.'
 
             fig = go.Figure()
             fig.add_trace(go.Bar(x=df['Nombre Ente Principal'] , y=df['coste_efectivo_PC']))
-
-
+            fig.update_layout(xaxis=dict(title=f'Percentil 75                        Mediana                     Percentil 25                       Elección'))
+            fig.update_layout(title=f'Coste Mediano por Habitante Partida seleccionada, Municipios con {cohorte} Hab.')
 
     fig.update_traces(texttemplate="%{y:,} €/h" , textposition='inside',marker_line_color='rgb(8,48,107)',
-                      marker_color=['rgb(55, 83, 109)', 'rgb(55, 83, 109)', 'rgb(217, 95, 2)', 'rgb(26, 118, 255)', 'rgb(26, 118, 255)'])
-
-    if partida_de_coste_types == 'TODOS' and municipio_types == 'TODOS':
-        fig.update_layout(title=f'Coste por Habitante Total' )
-
-    elif partida_de_coste_types == 'TODOS' and municipio_types != 'TODOS':
-        cohorte = df_final_pob.loc[df_final_pob['Nombre Ente Principal'] == municipio_types , 'cohorte_pob'].unique().to_list()[0]
-
-        fig.update_layout(title=f'Coste Mediano por Habitante Total')
-        fig.update_layout(xaxis=dict(title=f'Municipios con {cohorte} Hab.'))
+                      marker_color=['#D62728', '#3366CC',  '#2CA02C', 'rgb(217, 95, 2)'])
 
 
 
-        # fig.add_annotation( x=2 , y=5 , xref="x" ,  yref="y" , text="max=5" ,showarrow=True ,
-        #     font=dict(
-        #         family="Courier New, monospace" ,
-        #         size=16 ,
-        #         color="#ffffff"
-        #     ) ,  align="center" , arrowhead=2 , arrowsize=1 , arrowwidth=2 , arrowcolor="#636363" , ax=20 , ay=-30 ,
-        #     bordercolor="#c7c7c7" ,
-        #     borderwidth=2 ,
-        #     borderpad=4 ,
-        #     bgcolor="#ff7f0e" ,
-        #     opacity=0.8
-        # )
 
-
-    elif partida_de_coste_types != 'TODOS' and municipio_types != 'TODOS':
-        cohorte = df_final_pob_melt_PC.loc[
-            df_final_pob_melt_PC['Nombre Ente Principal'] == municipio_types , 'cohorte_pob'].unique().to_list()[0]
-        fig.update_layout(title=f'Coste Mediano por Habitante Total, {partida_de_coste_types}')
-        fig.update_layout(xaxis=dict(title=f'Municipios con {cohorte} Hab.'))
-
-    else:
-        fig.update_layout(title=f'Coste por Habitante, {partida_de_coste_types}')
+    # elif partida_de_coste_types != 'TODOS' and municipio_types != 'TODOS':
+    #     cohorte = df_final_pob_melt_PC.loc[
+    #         df_final_pob_melt_PC['Nombre Ente Principal'] == municipio_types , 'cohorte_pob'].unique().to_list()[0]
+    #     fig.update_layout(title=f'Coste Mediano por Habitante Total, {partida_de_coste_types}')
+    #     fig.update_layout(xaxis=dict(title=f'Municipios con {cohorte} Hab.'))
+    #
+    # else:
+    #     fig.update_layout(title=f'Coste por Habitante, {partida_de_coste_types}')
 
     fig.update_layout(margin=dict(l=10 , r=50 , t=50 , b=10),
                       xaxis_tickfont_size=12 ,
@@ -981,7 +1003,7 @@ def make_map_figure(CCAA_types, PROV_types,municipio_types,partida_de_coste_type
         #                                           ticktext=[min,median,max]))
 
         if CCAA_types == 'TODAS' and PROV_types == 'TODAS' and municipio_types == 'TODOS':
-            df = df_final_pob[df_final_pob['Población 2018']>5000]
+            df = df_final_pob#[df_final_pob['Población 2018']>5000]
             df['Población'] = df['Población 2018']
             df['PC_TOTAL'] = df.apply(lambda new: round(new['PC_TOTAL'] , 0) , axis=1)
             q9 = df['PC_TOTAL'].quantile(0.90)
@@ -990,13 +1012,13 @@ def make_map_figure(CCAA_types, PROV_types,municipio_types,partida_de_coste_type
             min = df['PC_TOTAL'].min()
             median = df['PC_TOTAL'].median()
 
-            df_zoom_po = df_zoom_pob
-            df_zoom_po = df_zoom_po[df_zoom_po['Población 2018']>5000]
-            df_zoom_po.to_file('./data/main_temp/shapefiles_espana_municipiosCCAA.geojson' , driver='GeoJSON')
-            with open('./data/main_temp/shapefiles_espana_municipiosCCAA.geojson') as response:
-                countiesNN = json.load(response)
+            # df_zoom_po = df_zoom_pob
+            # df_zoom_po = df_zoom_po[df_zoom_po['Población 2018']>5000]
+            # df_zoom_po.to_file('./data/main_temp/shapefiles_espana_municipiosCCAA.geojson' , driver='GeoJSON')
+            # with open('./data/main_temp/shapefiles_espana_municipiosCCAA.geojson') as response:
+            #     countiesNN = json.load(response)
 
-            fig = px.choropleth_mapbox(df , geojson=countiesNN , locations='codigo_geo' , color='PC_TOTAL' ,
+            fig = px.choropleth_mapbox(df , geojson=counties , locations='codigo_geo' , color='PC_TOTAL' ,
                                        color_continuous_scale="haline" ,
                                        range_color=(q1 , q9) ,
                                        mapbox_style="carto-positron" ,
@@ -1240,7 +1262,8 @@ def make_map_figure(CCAA_types, PROV_types,municipio_types,partida_de_coste_type
         #                                           ticktext=[min , median , max]))
 
         if CCAA_types == 'TODAS' and PROV_types == 'TODAS' and municipio_types == 'TODOS':
-            df = df_final_pob_melt_PC[df_final_pob_melt_PC['Población 2018']>5000]
+
+            df = df_final_pob_melt_PC#[df_final_pob_melt_PC['Población 2018']>5000]
             df['Población'] = df['Población 2018']
             df['coste_efectivo_PC'] = df.apply(lambda new: round(new['coste_efectivo_PC'] , 0) , axis=1)
             df= df.loc[(df['Descripción']==partida_de_coste_types)& (df['coste_efectivo_PC'] >= 1)]
@@ -1250,15 +1273,15 @@ def make_map_figure(CCAA_types, PROV_types,municipio_types,partida_de_coste_type
             min = df['coste_efectivo_PC'].min()
             median = df['coste_efectivo_PC'].median()
 
-            df_zoom_po = df_zoom_pob
-            df_zoom_po = df_zoom_po[df_zoom_po['Población 2018'] > 5000]
-            df_zoom_po.to_file('./data/main_temp/shapefiles_espana_municipiosCCAA.geojson' , driver='GeoJSON')
-            with open('./data/main_temp/shapefiles_espana_municipiosCCAA.geojson') as response:
-                countiesNN = json.load(response)
+            # df_zoom_po = df_zoom_pob
+            # df_zoom_po = df_zoom_po[df_zoom_po['Población 2018'] > 5000]
+            # df_zoom_po.to_file('./data/main_temp/shapefiles_espana_municipiosCCAA.geojson' , driver='GeoJSON')
+            # with open('./data/main_temp/shapefiles_espana_municipiosCCAA.geojson') as response:
+            #     countiesNN = json.load(response)
 
 
 
-            fig = px.choropleth_mapbox(df , geojson=countiesNN , locations='codigo_geo' , color='coste_efectivo_PC' ,
+            fig = px.choropleth_mapbox(df , geojson=counties , locations='codigo_geo' , color='coste_efectivo_PC' ,
                                        color_continuous_scale="haline" ,
                                        range_color=(q1 , q9) ,
                                        mapbox_style="carto-positron" ,
