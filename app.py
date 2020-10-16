@@ -703,18 +703,19 @@ def make_count_figure(CCAA_types, PROV_types,municipio_types,partida_de_coste_ty
                       yaxis=dict(
                           title='Coste efectivo €/hab.' ,
                           titlefont_size=16 ,
-                          tickfont_size=13 ,showticklabels=True,
+                          tickfont_size=12 ,showticklabels=True,
                       ) ,
                       xaxis=dict(
                           titlefont_size=16 ,
-                          tickfont_size=13 , showticklabels=True ,
+                          tickfont_size=14 , showticklabels=True ,
                       ) ,
 
                       legend=dict(
                           x=1 ,
                           y=1 ,
-                          bgcolor='rgba(255, 255, 255, 0)' ,
-                          bordercolor='rgba(255, 255, 255, 0)'
+                          # bgcolor='rgba(255, 255, 255, 0)' ,
+                          # bordercolor='rgba(255, 255, 255, 0)',
+                          font_size=14, #bgcolor="#e5ecf6",bordercolor="Black",
                       ) ,
                       barmode='relative' ,
                       bargap=0.55 ,  # gap between bars of adjacent location coordinates.
@@ -1003,17 +1004,15 @@ def make_individual_figure(CCAA_types, PROV_types,municipio_types, main_graph):
 
 
 
-
-
-
-    fig.update_layout(margin=dict(l=20 , r=50 , t=50 , b=50) ,
+    fig.update_traces( marker_line_color='rgb(8,48,107)')
+    fig.update_layout(margin=dict(l=20 , r=50 , t=50 , b=50) ,#plot_bgcolor="white",
                           title='Costes €/hab. por Partida de coste' ,
                           xaxis_tickfont_size=12 ,
                           xaxis_tickangle=-45 ,
                           yaxis=dict(
                               title='Coste €/hab.' ,
                               titlefont_size=16 ,
-                              tickfont_size=14 ,
+                              tickfont_size=12 ,showticklabels=True,
                           ) ,
                           xaxis=dict(
                               title='Partidas de Costes' ,
@@ -1024,13 +1023,15 @@ def make_individual_figure(CCAA_types, PROV_types,municipio_types, main_graph):
                           legend=dict(
                               x=0.40 ,
                               y=0.9 ,
-                              bgcolor='rgba(255, 255, 255, 0)' ,
-                              bordercolor='rgba(255, 255, 255, 0)',
-                              font_size=14
+                              # bgcolor='rgba(255, 255, 255, 0)' ,
+                              # bordercolor='rgba(255, 255, 255, 0)',
+                              font_size=14,bgcolor="#e5ecf6",
+        # bordercolor="Black",
+        # borderwidth=0.8
                           ) ,
                           barmode='group' ,
-                          bargap=0.20 ,  # gap between bars of adjacent location coordinates.
-                          bargroupgap=0.1  # gap between bars of the same location coordinate.
+                          bargap=0.30 ,  # gap between bars of adjacent location coordinates.
+                          bargroupgap=0.35  # gap between bars of the same location coordinate.
                           )
 
     return fig
