@@ -19,8 +19,8 @@ warnings.filterwarnings('ignore')
 #####   controls
 from controls import  CCAA_dict, PROV,  MUNICIPIOS, PDC, df_final_pob_melt, df_final_pob, df_indicadores_pob, df_final_pob_dropdown,\
     df_final_pob_dropdown_c, df_final_pob_poblaciontext, df_final_pob_melt_PC, df_table_c, df_table_n, df_table_p, df_table_m,  df_n, \
-    df_c, df_p, df_count_c, df_count_cn, df_count_c_pc, df_count_p, df_count_p_pc, df_count_c_new_n, df_count_p_new_n,\
-    counties, CCAA_CO, PROV_CO, MUNI_CO, df_zoom_pob, df_final_pob_round, df_final_pob_round_melt_PC, df_final_pob_round_melt_PC_object
+    df_c, df_p, df_m, df_count_c, df_count_cn, df_count_c_pc, df_count_p, df_count_p_pc, df_count_c_new_n, df_count_p_new_n,df_count_m_pc,\
+    counties, CCAA_CO, PROV_CO, MUNI_CO, df_zoom_pob, df_final_pob_round, df_final_pob_round_melt_PC, df_final_pob_round_melt_PC_object, df_cohorte
 
 #################  change data
 
@@ -195,7 +195,7 @@ app.layout = html.Div(
         html.Div(
             [
                 html.Div(
-                    [dcc.Graph(id="map_graph")],
+                    [dcc.Graph(id="map_graph",config={'modeBarButtonsToRemove': ['lasso2d','pan2d'],'displaylogo': False})],
                     className="pretty_container seven columns",style={'min-height': '680px'},
                 )
             ],
@@ -394,7 +394,7 @@ def update_text(CCAA_types, PROV_types,municipio_types,partida_de_coste_types ):
             value = df_final_pob_melt['coste_efectivo'].sum()/df_final_pob['Población 2018'].sum()
 
         else:
-            cohorte=df_final_pob_melt.loc[df_final_pob_melt['Nombre Ente Principal'] == municipio_types , 'cohorte_pob']\
+            cohorte=df_cohorte.loc[df_cohorte['Nombre Ente Principal'] == municipio_types , 'cohorte_pob']\
                           .unique().to_list()[0]
 
             value=df_final_pob_melt.loc[df_final_pob_melt['cohorte_pob'] == cohorte,'coste_efectivo'].sum() \
@@ -418,7 +418,7 @@ def update_text(CCAA_types, PROV_types,municipio_types,partida_de_coste_types ):
             / df_final_pob['Población 2018'].sum()
 
         else:
-            cohorte =df_final_pob_melt.loc[df_final_pob_melt['Nombre Ente Principal'] == municipio_types , 'cohorte_pob'] \
+            cohorte =df_cohorte.loc[df_cohorte['Nombre Ente Principal'] == municipio_types , 'cohorte_pob'] \
                 .unique().to_list()[0]
             value = np.median(df_final_pob_melt_PC.loc[(df_final_pob_melt_PC['cohorte_pob'] == cohorte) & \
                     (df_final_pob_melt_PC['Descripción'] == f'{partida_de_coste_types}') & (df_final_pob_melt_PC['coste_efectivo_PC'] > 0) , 'coste_efectivo_PC'])
@@ -446,11 +446,18 @@ def make_count_figure(CCAA_types, PROV_types,municipio_types,partida_de_coste_ty
     if partida_de_coste_types == 'TODOS':
         if CCAA_types == 'TODAS' and PROV_types == 'TODAS' and municipio_types == 'TODOS':
             df = df_count_cn
-
+            df1=df.iloc[[0]]
+            df2=df.iloc[[1]]
+            df3=df.iloc[[2]]
+            df4=df.iloc[[3]]
 
             fig = go.Figure()
-            fig.add_trace(go.Bar(x=df['CCAA'] , y=df['PC_TOTAL']))
-            fig.update_layout(xaxis=dict(title=f'Percentil 90                        Percentil 75                     Percentil 25                       Mediana'))
+            fig.add_trace(go.Bar(x=df1['CCAA'] , y=df1['PC_TOTAL'],name='Percentil 90',marker_color='#D62728'))
+            fig.add_trace(go.Bar(x=df2['CCAA'] , y=df2['PC_TOTAL'],name='Percentil 75',marker_color='#3366CC'))
+            fig.add_trace(go.Bar(x=df3['CCAA'] , y=df3['PC_TOTAL'],name='Percentil 25',marker_color='#2CA02C'))
+            fig.add_trace(go.Bar(x=df4['CCAA'] , y=df4['PC_TOTAL'],name='Mediana',marker_color='rgb(217, 95, 2)'))
+
+
             fig.update_layout(title=f'Coste por habitante Total, Comunidades Autónomas')
 
         elif CCAA_types != 'TODAS' and PROV_types == 'TODAS' and municipio_types == 'TODOS':
@@ -458,9 +465,16 @@ def make_count_figure(CCAA_types, PROV_types,municipio_types,partida_de_coste_ty
             df = df.append(df_count_c.loc[df_count_c['CCAA']==CCAA_types])
             df.iloc[3,0]=f'{CCAA_types}.'
 
+            df1 = df.iloc[[0]]
+            df2 = df.iloc[[1]]
+            df3 = df.iloc[[2]]
+            df4 = df.iloc[[3]]
+
             fig = go.Figure()
-            fig.add_trace(go.Bar(x=df['CCAA'] , y=df['PC_TOTAL']))
-            fig.update_layout(xaxis=dict(title=f'Percentil 75                        Mediana                     Percentil 25                       Elección'))
+            fig.add_trace(go.Bar(x=df1['CCAA'] , y=df1['PC_TOTAL'] , name='Percentil 75' , marker_color='#D62728'))
+            fig.add_trace(go.Bar(x=df2['CCAA'] , y=df2['PC_TOTAL'] , name='Mediana' , marker_color='#3366CC'))
+            fig.add_trace(go.Bar(x=df3['CCAA'] , y=df3['PC_TOTAL'] , name='Percentil 25' , marker_color='#2CA02C'))
+            fig.add_trace(go.Bar(x=df4['CCAA'] , y=df4['PC_TOTAL'] , name='Elección' , marker_color='rgb(217, 95, 2)'))
             fig.update_layout(title=f'Coste por habitante Total, Comunidades Autónomas')
 
         elif CCAA_types != 'TODAS' and PROV_types != 'TODAS' and municipio_types == 'TODOS':
@@ -469,10 +483,16 @@ def make_count_figure(CCAA_types, PROV_types,municipio_types,partida_de_coste_ty
 
             df.iloc[3 , 0] = f'{PROV_types}.'
 
+            df1 = df.iloc[[0]]
+            df2 = df.iloc[[1]]
+            df3 = df.iloc[[2]]
+            df4 = df.iloc[[3]]
 
             fig = go.Figure()
-            fig.add_trace(go.Bar(x=df['Provincia'] , y=df['PC_TOTAL']))
-            fig.update_layout(xaxis=dict(title=f'Percentil 75                        Mediana                     Percentil 25                       Elección'))
+            fig.add_trace(go.Bar(x=df1['Provincia'] , y=df1['PC_TOTAL'] , name='Percentil 75' , marker_color='#D62728'))
+            fig.add_trace(go.Bar(x=df2['Provincia'] , y=df2['PC_TOTAL'] , name='Mediana' , marker_color='#3366CC'))
+            fig.add_trace(go.Bar(x=df3['Provincia'] , y=df3['PC_TOTAL'] , name='Percentil 25' , marker_color='#2CA02C'))
+            fig.add_trace(go.Bar(x=df4['Provincia'] , y=df4['PC_TOTAL'] , name='Elección' , marker_color='rgb(217, 95, 2)'))
             fig.update_layout(title=f'Coste por habitante Total, Provincias')
 
         elif CCAA_types == 'TODAS' and PROV_types != 'TODAS' and municipio_types == 'TODOS':
@@ -481,13 +501,20 @@ def make_count_figure(CCAA_types, PROV_types,municipio_types,partida_de_coste_ty
 
             df.iloc[3 , 0] = f'{PROV_types}.'
 
+            df1 = df.iloc[[0]]
+            df2 = df.iloc[[1]]
+            df3 = df.iloc[[2]]
+            df4 = df.iloc[[3]]
+
             fig = go.Figure()
-            fig.add_trace(go.Bar(x=df['Provincia'] , y=df['PC_TOTAL']))
-            fig.update_layout(xaxis=dict(title=f'Percentil 75                        Mediana                     Percentil 25                       Elección'))
+            fig.add_trace(go.Bar(x=df1['Provincia'] , y=df1['PC_TOTAL'] , name='Percentil 75' , marker_color='#D62728'))
+            fig.add_trace(go.Bar(x=df2['Provincia'] , y=df2['PC_TOTAL'] , name='Mediana' , marker_color='#3366CC'))
+            fig.add_trace(go.Bar(x=df3['Provincia'] , y=df3['PC_TOTAL'] , name='Percentil 25' , marker_color='#2CA02C'))
+            fig.add_trace(go.Bar(x=df4['Provincia'] , y=df4['PC_TOTAL'] , name='Elección' , marker_color='rgb(217, 95, 2)'))
             fig.update_layout(title=f'Coste por habitante Total, Provincias')
 
         else:
-            cohorte = df_final_pob.loc[df_final_pob['Nombre Ente Principal'] == municipio_types , 'cohorte_pob'].unique().to_list()[0]
+            cohorte = df_cohorte.loc[df_cohorte['Nombre Ente Principal'] == municipio_types , 'cohorte_pob'].unique().to_list()[0]
 
             df = df_final_pob[['Nombre Ente Principal' , 'cohorte_pob' , 'PC_TOTAL']].loc[
                 (df_final_pob['cohorte_pob'] == cohorte) & (df_final_pob['PC_TOTAL'] > 0)].sort_values(by='PC_TOTAL' ,ascending=False)
@@ -502,10 +529,18 @@ def make_count_figure(CCAA_types, PROV_types,municipio_types,partida_de_coste_ty
             df['PC_TOTAL'] = round(df['PC_TOTAL'] , )
             df.iloc[3 , 0] = f'{municipio_types}.'
 
+            df1 = df.iloc[[0]]
+            df2 = df.iloc[[1]]
+            df3 = df.iloc[[2]]
+            df4 = df.iloc[[3]]
+
             fig = go.Figure()
-            fig.add_trace(go.Bar(x=df['Nombre Ente Principal'] , y=df['PC_TOTAL']))
-            fig.update_layout(xaxis=dict(title=f'Percentil 75                        Mediana                     Percentil 25                       Elección'))
-            fig.update_layout(title=f'Coste Mediano por habitante Total, Municipios con {cohorte} hab.')
+            fig.add_trace(go.Bar(x=df1['Nombre Ente Principal'] , y=df1['PC_TOTAL'] , name='Percentil 75' , marker_color='#D62728'))
+            fig.add_trace(go.Bar(x=df2['Nombre Ente Principal'] , y=df2['PC_TOTAL'] , name='Mediana' , marker_color='#3366CC'))
+            fig.add_trace(go.Bar(x=df3['Nombre Ente Principal'] , y=df3['PC_TOTAL'] , name='Percentil 25' , marker_color='#2CA02C'))
+            fig.add_trace(go.Bar(x=df4['Nombre Ente Principal'] , y=df4['PC_TOTAL'] , name='Elección' , marker_color='rgb(217, 95, 2)'))
+            fig.update_layout(xaxis=dict(title=f' Municipios con {cohorte} hab.'))
+            fig.update_layout(title=f'Coste Mediano por habitante Total')
 
 
 
@@ -515,18 +550,23 @@ def make_count_figure(CCAA_types, PROV_types,municipio_types,partida_de_coste_ty
 
             df = df.loc[df['Descripción'] == partida_de_coste_types].sort_values(by='PC_TOTAL' , ascending=False)
 
-            df2 = df.loc[(df['PC_TOTAL'] == df['PC_TOTAL'].quantile(0.90 , interpolation='nearest')) | \
+            df8 = df.loc[(df['PC_TOTAL'] == df['PC_TOTAL'].quantile(0.90 , interpolation='nearest')) | \
                         (df['PC_TOTAL'] == df['PC_TOTAL'].quantile(0.75 , interpolation='nearest')) | \
                         (df['PC_TOTAL'] == df['PC_TOTAL'].quantile(0.25 , interpolation='nearest'))]
-            df2=df2.sort_values(by='PC_TOTAL' , ascending=False)
+            df8=df8.sort_values(by='PC_TOTAL' , ascending=False)
 
-            df2=df2.append(df.loc[df['PC_TOTAL'] == df['PC_TOTAL'].quantile(0.50 , interpolation='nearest')])
-            df2['PC_TOTAL'] = round(df2['PC_TOTAL'] , )
-
+            df8=df8.append(df.loc[df['PC_TOTAL'] == df['PC_TOTAL'].quantile(0.50 , interpolation='nearest')])
+            df8['PC_TOTAL'] = round(df8['PC_TOTAL'] , )
+            df1 = df8.iloc[[0]]
+            df2 = df8.iloc[[1]]
+            df3 = df8.iloc[[2]]
+            df4 = df8.iloc[[3]]
 
             fig = go.Figure()
-            fig.add_trace(go.Bar(x=df2['CCAA'] , y=df2['PC_TOTAL']))
-            fig.update_layout(xaxis=dict(title=f'Percentil 90                        Percentil 75                     Percentil 25                       Mediana'))
+            fig.add_trace(go.Bar(x=df1['CCAA'] , y=df1['PC_TOTAL'] , name='Percentil 90' , marker_color='#D62728'))
+            fig.add_trace(go.Bar(x=df2['CCAA'] , y=df2['PC_TOTAL'] , name='Percentil 75' , marker_color='#3366CC'))
+            fig.add_trace(go.Bar(x=df3['CCAA'] , y=df3['PC_TOTAL'] , name='Percentil 25' , marker_color='#2CA02C'))
+            fig.add_trace(go.Bar(x=df4['CCAA'] , y=df4['PC_TOTAL'] , name='Mediana' , marker_color='rgb(217, 95, 2)'))
             fig.update_layout(title=f'Coste por hab. Total, CCCAA, {partida_de_coste_types}')
 
 
@@ -535,18 +575,25 @@ def make_count_figure(CCAA_types, PROV_types,municipio_types,partida_de_coste_ty
 
             df = df.loc[df['Descripción'] == partida_de_coste_types].sort_values(by='PC_TOTAL' , ascending=False)
 
-            df2 = df.loc[(df['PC_TOTAL'] == df['PC_TOTAL'].quantile(0.75 , interpolation='nearest')) | \
+            df8 = df.loc[(df['PC_TOTAL'] == df['PC_TOTAL'].quantile(0.75 , interpolation='nearest')) | \
                          (df['PC_TOTAL'] == df['PC_TOTAL'].quantile(0.50 , interpolation='nearest')) | \
                          (df['PC_TOTAL'] == df['PC_TOTAL'].quantile(0.25 , interpolation='nearest'))]
-            df2 = df2.sort_values(by='PC_TOTAL' , ascending=False)
+            df8 = df8.sort_values(by='PC_TOTAL' , ascending=False)
 
-            df2 = df2.append(df.loc[df['CCAA'] == CCAA_types])
-            df2['PC_TOTAL'] = round(df2['PC_TOTAL'] , )
-            df2.iloc[3,0] = f'{CCAA_types}.'
+            df8 = df8.append(df.loc[df['CCAA'] == CCAA_types])
+            df8['PC_TOTAL'] = round(df8['PC_TOTAL'] , )
+            df8.iloc[3,0] = f'{CCAA_types}.'
+
+            df1 = df8.iloc[[0]]
+            df2 = df8.iloc[[1]]
+            df3 = df8.iloc[[2]]
+            df4 = df8.iloc[[3]]
 
             fig = go.Figure()
-            fig.add_trace(go.Bar(x=df2['CCAA'] , y=df2['PC_TOTAL']))
-            fig.update_layout(xaxis=dict(title=f'Percentil 75                        Mediana                     Percentil 25                       Elección'))
+            fig.add_trace(go.Bar(x=df1['CCAA'] , y=df1['PC_TOTAL'] , name='Percentil 75' , marker_color='#D62728'))
+            fig.add_trace(go.Bar(x=df2['CCAA'] , y=df2['PC_TOTAL'] , name='Mediana' , marker_color='#3366CC'))
+            fig.add_trace(go.Bar(x=df3['CCAA'] , y=df3['PC_TOTAL'] , name='Percentil 25' , marker_color='#2CA02C'))
+            fig.add_trace(go.Bar(x=df4['CCAA'] , y=df4['PC_TOTAL'] , name='Elección' , marker_color='rgb(217, 95, 2)'))
             fig.update_layout(title=f'Coste por hab. Total, CCCAA, {partida_de_coste_types}')
 
         elif CCAA_types != 'TODAS' and PROV_types != 'TODAS' and municipio_types == 'TODOS':
@@ -554,18 +601,25 @@ def make_count_figure(CCAA_types, PROV_types,municipio_types,partida_de_coste_ty
 
             df = df.loc[df['Descripción'] == partida_de_coste_types].sort_values(by='PC_TOTAL' , ascending=False)
 
-            df2 = df.loc[(df['PC_TOTAL'] == df['PC_TOTAL'].quantile(0.75 , interpolation='nearest')) | \
+            df8 = df.loc[(df['PC_TOTAL'] == df['PC_TOTAL'].quantile(0.75 , interpolation='nearest')) | \
                          (df['PC_TOTAL'] == df['PC_TOTAL'].quantile(0.50 , interpolation='nearest')) | \
                          (df['PC_TOTAL'] == df['PC_TOTAL'].quantile(0.25 , interpolation='nearest'))]
-            df2 = df2.sort_values(by='PC_TOTAL' , ascending=False)
+            df8 = df8.sort_values(by='PC_TOTAL' , ascending=False)
 
-            df2 = df2.append(df.loc[df['Provincia'] == PROV_types])
-            df2['PC_TOTAL'] = round(df2['PC_TOTAL'] , )
-            df2.iloc[3 , 0] = f'{PROV_types}.'
+            df8 = df8.append(df.loc[df['Provincia'] == PROV_types])
+            df8['PC_TOTAL'] = round(df8['PC_TOTAL'] , )
+            df8.iloc[3 , 0] = f'{PROV_types}.'
+
+            df1 = df8.iloc[[0]]
+            df2 = df8.iloc[[1]]
+            df3 = df8.iloc[[2]]
+            df4 = df8.iloc[[3]]
 
             fig = go.Figure()
-            fig.add_trace(go.Bar(x=df2['Provincia'] , y=df2['PC_TOTAL']))
-            fig.update_layout(xaxis=dict(title=f'Percentil 75                        Mediana                     Percentil 25                       Elección'))
+            fig.add_trace(go.Bar(x=df1['Provincia'] , y=df1['PC_TOTAL'] , name='Percentil 75' , marker_color='#D62728'))
+            fig.add_trace(go.Bar(x=df2['Provincia'] , y=df2['PC_TOTAL'] , name='Mediana' , marker_color='#3366CC'))
+            fig.add_trace(go.Bar(x=df3['Provincia'] , y=df3['PC_TOTAL'] , name='Percentil 25' , marker_color='#2CA02C'))
+            fig.add_trace(go.Bar(x=df4['Provincia'] , y=df4['PC_TOTAL'] , name='Elección' , marker_color='rgb(217, 95, 2)'))
             fig.update_layout(title=f'Coste por hab. Total, Provincias, {partida_de_coste_types}')
 
 
@@ -575,26 +629,33 @@ def make_count_figure(CCAA_types, PROV_types,municipio_types,partida_de_coste_ty
 
             df = df.loc[df['Descripción'] == partida_de_coste_types].sort_values(by='PC_TOTAL' , ascending=False)
 
-            df2 = df.loc[(df['PC_TOTAL'] == df['PC_TOTAL'].quantile(0.75 , interpolation='nearest')) | \
+            df8 = df.loc[(df['PC_TOTAL'] == df['PC_TOTAL'].quantile(0.75 , interpolation='nearest')) | \
                          (df['PC_TOTAL'] == df['PC_TOTAL'].quantile(0.50 , interpolation='nearest')) | \
                          (df['PC_TOTAL'] == df['PC_TOTAL'].quantile(0.25 , interpolation='nearest'))]
-            df2 = df2.sort_values(by='PC_TOTAL' , ascending=False)
+            df8 = df8.sort_values(by='PC_TOTAL' , ascending=False)
 
-            df2 = df2.append(df.loc[df['Provincia'] == PROV_types])
-            df2['PC_TOTAL'] = round(df2['PC_TOTAL'] , )
-            df2.iloc[3 , 0] = f'{PROV_types}.'
+            df8 = df8.append(df.loc[df['Provincia'] == PROV_types])
+            df8['PC_TOTAL'] = round(df8['PC_TOTAL'] , )
+            df8.iloc[3 , 0] = f'{PROV_types}.'
+
+            df1 = df8.iloc[[0]]
+            df2 = df8.iloc[[1]]
+            df3 = df8.iloc[[2]]
+            df4 = df8.iloc[[3]]
 
             fig = go.Figure()
-            fig.add_trace(go.Bar(x=df2['Provincia'] , y=df2['PC_TOTAL']))
-            fig.update_layout(xaxis=dict(title=f'Percentil 75                        Mediana                     Percentil 25                       Elección'))
+            fig.add_trace(go.Bar(x=df1['Provincia'] , y=df1['PC_TOTAL'] , name='Percentil 75' , marker_color='#D62728'))
+            fig.add_trace(go.Bar(x=df2['Provincia'] , y=df2['PC_TOTAL'] , name='Mediana' , marker_color='#3366CC'))
+            fig.add_trace(go.Bar(x=df3['Provincia'] , y=df3['PC_TOTAL'] , name='Percentil 25' , marker_color='#2CA02C'))
+            fig.add_trace(
+                go.Bar(x=df4['Provincia'] , y=df4['PC_TOTAL'] , name='Elección' , marker_color='rgb(217, 95, 2)'))
             fig.update_layout(title=f'Coste por hab. Total, Provincias, {partida_de_coste_types}')
 
         else:
-            cohorte = df_final_pob_melt_PC.loc[df_final_pob_melt_PC['Nombre Ente Principal'] == municipio_types , 'cohorte_pob'].unique().to_list()[0]
+            cohorte = df_cohorte.loc[df_cohorte['Nombre Ente Principal'] == municipio_types , 'cohorte_pob'].unique().to_list()[0]
 
-            df = df_final_pob_melt_PC[['Nombre Ente Principal' , 'cohorte_pob' , 'Descripción' , 'coste_efectivo_PC']].loc[
-                (df_final_pob_melt_PC['cohorte_pob'] == cohorte)  & ( df_final_pob_melt_PC['Descripción'] == partida_de_coste_types)].sort_values(by='coste_efectivo_PC' , ascending=False)
-            df['Nombre Ente Principal'] = df['Nombre Ente Principal'].astype('object')
+            df = df_count_m_pc.loc[(df_count_m_pc['cohorte_pob'] == cohorte)  & (df_count_m_pc['Descripción'] == partida_de_coste_types)].sort_values(by='coste_efectivo_PC' , ascending=False)
+            # df['Nombre Ente Principal'] = df['Nombre Ente Principal'].astype('object')
 
             df2 = df.loc[(df['coste_efectivo_PC'] == df['coste_efectivo_PC'].quantile(0.75 , interpolation='nearest')) | \
                          (df['coste_efectivo_PC'] == df['coste_efectivo_PC'].quantile(0.50 , interpolation='nearest')) | \
@@ -607,13 +668,22 @@ def make_count_figure(CCAA_types, PROV_types,municipio_types,partida_de_coste_ty
             df.iloc[3 , 0] = f'{municipio_types}.'
             df['coste_efectivo_PC'] = round(df['coste_efectivo_PC'] , )
 
+            df1 = df.iloc[[0]]
+            df2 = df.iloc[[1]]
+            df3 = df.iloc[[2]]
+            df4 = df.iloc[[3]]
+
             fig = go.Figure()
-            fig.add_trace(go.Bar(x=df['Nombre Ente Principal'] , y=df['coste_efectivo_PC']))
-            fig.update_layout(xaxis=dict(title=f'Percentil 75                        Mediana                     Percentil 25                       Elección'))
-            fig.update_layout(title=f'Coste Mediano por hab. Partida seleccionada, Municipios con {cohorte} hab.')
+            fig.add_trace(go.Bar(x=df1['Nombre Ente Principal'] , y=df1['coste_efectivo_PC'] , name='Percentil 75' , marker_color='#D62728'))
+            fig.add_trace(go.Bar(x=df2['Nombre Ente Principal'] , y=df2['coste_efectivo_PC'] , name='Mediana' , marker_color='#3366CC'))
+            fig.add_trace(go.Bar(x=df3['Nombre Ente Principal'] , y=df3['coste_efectivo_PC'] , name='Percentil 25' , marker_color='#2CA02C'))
+            fig.add_trace(go.Bar(x=df4['Nombre Ente Principal'] , y=df4['coste_efectivo_PC'] , name='Elección' , marker_color='rgb(217, 95, 2)'))
+            fig.update_layout(xaxis=dict(title=f'Municipios con {cohorte} hab.'))
+            fig.update_layout(title=f'Coste Mediano por hab., {partida_de_coste_types}')
 
     fig.update_traces(texttemplate="%{y:,} €/h" , textposition='inside',marker_line_color='rgb(8,48,107)',textfont_size=13,
-                      marker_color=['#D62728', '#3366CC',  '#2CA02C', 'rgb(217, 95, 2)'])
+                      #marker_color=['#D62728', '#3366CC',  '#2CA02C', 'rgb(217, 95, 2)']
+                      )
 
 
 
@@ -641,7 +711,7 @@ def make_count_figure(CCAA_types, PROV_types,municipio_types,partida_de_coste_ty
                       ) ,
 
                       legend=dict(
-                          x=0.55 ,
+                          x=1 ,
                           y=1 ,
                           bgcolor='rgba(255, 255, 255, 0)' ,
                           bordercolor='rgba(255, 255, 255, 0)'
@@ -649,7 +719,7 @@ def make_count_figure(CCAA_types, PROV_types,municipio_types,partida_de_coste_ty
                       barmode='relative' ,
                       bargap=0.55 ,  # gap between bars of adjacent location coordinates.
                       # bargroupgap=0.1,  # gap between bars of the same location coordinate.
-                      autosize=True,showlegend=False)
+                      autosize=True,showlegend=True)
 
     return fig
 
@@ -911,18 +981,18 @@ def make_individual_figure(CCAA_types, PROV_types,municipio_types, main_graph):
                              marker_color='rgb(26, 118, 255)'))
 
     else:
-        df =df_final_pob_melt_PC.loc[df_final_pob_melt_PC['Nombre Ente Principal'] == municipio_types].sort_values(by='coste_efectivo_PC',ascending=False)
-        df['coste_efectivo_PC'] = round(df['coste_efectivo_PC'] , )
+        df =df_m.loc[df_m['Nombre Ente Principal'] == municipio_types].sort_values(by='coste_efectivo_PC',ascending=False)
+        # df['coste_efectivo_PC'] = round(df['coste_efectivo_PC'] , )
 
 
 
-        cohorte = df_final_pob_melt.loc[df_final_pob_melt['Nombre Ente Principal'] == municipio_types , 'cohorte_pob'] \
+        cohorte = df_cohorte.loc[df_cohorte['Nombre Ente Principal'] == municipio_types , 'cohorte_pob'] \
             .unique().to_list()[0]
 
-        df2 = df_final_pob_melt_PC.loc[ df_final_pob_melt_PC['coste_efectivo_PC'] > 0]
-        df2 = df2.pivot_table(index=['cohorte_pob','Descripción'],values=['coste_efectivo_PC'],aggfunc=np.median).reset_index()
+        # df2 = df_final_pob_melt_PC.loc[ df_final_pob_melt_PC['coste_efectivo_PC'] > 0]
+        df2 = df_m.pivot_table(index=['cohorte_pob','Descripción'],values=['coste_efectivo_PC'],aggfunc=np.median).reset_index()
         df2= df2.loc[df2['cohorte_pob'] == cohorte]
-        df2['coste_efectivo_PC'] = round(df2['coste_efectivo_PC'] , )
+        # df2['coste_efectivo_PC'] = round(df2['coste_efectivo_PC'] , )
 
 
         fig = go.Figure()

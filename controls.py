@@ -13,6 +13,9 @@ df_final_pob_melt = pd.read_parquet('./data/main_processed/df_final_pob_melt.par
 df_final_pob_melt_PC = pd.read_parquet('./data/main_processed/df_final_pob_melt_PC.parquet')
 df_indicadores_pob_pivot = pd.read_parquet('./data/main_processed/df_indicadores_pob_pivot.parquet')
 
+df_final_pob_melt_PC=df_final_pob_melt_PC.drop(columns=['Tipo Ente Principal','Código Ente Principal'])
+df_final_pob_melt=df_final_pob_melt.drop(columns=['Tipo Ente Principal','Código Ente Principal'])
+
 ########## dropdown
 
 df_final_pob_dropdown=pd.read_parquet('./data/main_processed/df_final_pob_dropdown.parquet')
@@ -80,6 +83,9 @@ df_c= df_final_pob_melt.pivot_table(index=['CCAA' , 'Descripción'] , values=['c
 df_p = df_final_pob_melt.pivot_table(index=['Provincia' , 'Descripción'] , values=['coste_efectivo'] ,
                                            aggfunc=sum).sort_values(by='coste_efectivo' , ascending=False).reset_index()
 
+df_m=df_final_pob_melt_PC[['Nombre Ente Principal' , 'cohorte_pob' , 'Descripción' , 'coste_efectivo_PC']]
+df_m['coste_efectivo_PC'] = round(df_m['coste_efectivo_PC'] , )
+
 
 ###########################   count graph
 
@@ -123,6 +129,9 @@ df_count_p_pc=df_final_pob_melt.pivot_table(index=['Provincia','Descripción'] ,
 df_count_p_pc = pd.merge(df_count_p_pc, pob_p, on='Provincia', how='left')
 df_count_p_pc['PC_TOTAL'] = df_count_p_pc['coste_efectivo']/df_count_p_pc['Población 2018']
 df_count_p_pc['Provincia'] = df_count_p_pc['Provincia'].astype('object')
+
+df_count_m_pc=df_final_pob_melt_PC[['Nombre Ente Principal' , 'cohorte_pob' , 'Descripción' , 'coste_efectivo_PC']]
+df_count_m_pc['Nombre Ente Principal'] = df_count_m_pc['Nombre Ente Principal'].astype('object')
 
 ###########################   map graph
 
@@ -173,3 +182,5 @@ df_final_pob_round_melt_PC['coste_efectivo_PC'] = round(df_final_pob_round_melt_
 df_final_pob_round_melt_PC_object=df_final_pob_round_melt_PC
 df_final_pob_round_melt_PC_object[df_final_pob_round_melt_PC_object.select_dtypes(['category']).columns] = \
             df_final_pob_round_melt_PC_object.select_dtypes(['category']).apply(lambda x: x.astype('object'))
+
+df_cohorte=df_final_pob[['Nombre Ente Principal','cohorte_pob']]
