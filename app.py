@@ -681,9 +681,11 @@ def make_count_figure(CCAA_types, PROV_types,municipio_types,partida_de_coste_ty
             fig.update_layout(xaxis=dict(title=f'Municipios con {cohorte} hab.'))
             fig.update_layout(title=f'Coste Mediano por hab., {partida_de_coste_types}')
 
-    fig.update_traces(texttemplate="%{y:,} €/h" , textposition='inside',marker_line_color='rgb(8,48,107)',textfont_size=13,
+    fig.update_traces(texttemplate="%{y:,} €/h" , textposition='inside',textfont_size=13,
                       #marker_color=['#D62728', '#3366CC',  '#2CA02C', 'rgb(217, 95, 2)']
                       )
+    # fig.update_traces(marker_line_color='rgb(8,48,107)')
+
 
 
 
@@ -1004,7 +1006,7 @@ def make_individual_figure(CCAA_types, PROV_types,municipio_types, main_graph):
 
 
 
-    fig.update_traces( marker_line_color='rgb(8,48,107)')
+    # fig.update_traces( marker_line_color='rgb(8,48,107)')
     fig.update_layout(margin=dict(l=20 , r=50 , t=50 , b=50) ,#plot_bgcolor="white",
                           title='Costes €/hab. por Partida de coste' ,
                           xaxis_tickfont_size=12 ,
