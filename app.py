@@ -684,7 +684,7 @@ def make_count_figure(CCAA_types, PROV_types,municipio_types,partida_de_coste_ty
     fig.update_traces(texttemplate="%{y:,} €/h" , textposition='inside',textfont_size=13,
                       #marker_color=['#D62728', '#3366CC',  '#2CA02C', 'rgb(217, 95, 2)']
                       )
-    # fig.update_traces(marker_line_color='rgb(8,48,107)')
+    fig.update_traces(marker_line_color='rgb(8,48,107)')
 
 
 
@@ -1032,8 +1032,11 @@ def make_individual_figure(CCAA_types, PROV_types,municipio_types, main_graph):
         # borderwidth=0.8
                           ) ,
                           barmode='group' ,
-                          bargap=0.30 ,  # gap between bars of adjacent location coordinates.
-                          bargroupgap=0.35  # gap between bars of the same location coordinate.
+                          # bargap=0.30 ,
+                          # bargroupgap=0.35  ,
+                        bargap = 0.20 ,  # gap between bars of adjacent location coordinates.
+                        bargroupgap = 0.25  # gap between bars of the same location coordinate.
+
                           )
 
     return fig
