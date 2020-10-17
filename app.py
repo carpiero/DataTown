@@ -1034,7 +1034,7 @@ def make_individual_figure(CCAA_types, PROV_types,municipio_types, main_graph):
                           barmode='group' ,
                           # bargap=0.30 ,
                           # bargroupgap=0.35  ,
-                        bargap = 0.20 ,  # gap between bars of adjacent location coordinates.
+                        bargap = 0.10 ,  # gap between bars of adjacent location coordinates.
                         bargroupgap = 0.25  # gap between bars of the same location coordinate.
 
                           )
