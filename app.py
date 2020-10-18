@@ -519,8 +519,8 @@ def make_count_figure(CCAA_types, PROV_types,municipio_types,partida_de_coste_ty
             df = df_final_pob[['Nombre Ente Principal' , 'cohorte_pob' , 'PC_TOTAL']].loc[
                 (df_final_pob['cohorte_pob'] == cohorte) & (df_final_pob['PC_TOTAL'] > 0)].sort_values(by='PC_TOTAL' ,ascending=False)
             df['Nombre Ente Principal'] = df['Nombre Ente Principal'].astype('object')
-            df2 = df.loc[(df['PC_TOTAL'] == df['PC_TOTAL'].quantile(0.75 , interpolation='nearest')) | \
-                         (df['PC_TOTAL'] == df['PC_TOTAL'].quantile(0.50 , interpolation='nearest')) | \
+            df2 = df.loc[(df['PC_TOTAL'] == df['PC_TOTAL'].quantile(0.77 , interpolation='nearest')) | \
+                         (df['PC_TOTAL'] == df['PC_TOTAL'].quantile(0.51 , interpolation='nearest')) | \
                          (df['PC_TOTAL'] == df['PC_TOTAL'].quantile(0.25 , interpolation='nearest'))]
 
             df2.drop_duplicates(subset='PC_TOTAL' , keep='last' , inplace=True)
@@ -657,9 +657,9 @@ def make_count_figure(CCAA_types, PROV_types,municipio_types,partida_de_coste_ty
             df = df_count_m_pc.loc[(df_count_m_pc['cohorte_pob'] == cohorte)  & (df_count_m_pc['Descripción'] == partida_de_coste_types)].sort_values(by='coste_efectivo_PC' , ascending=False)
             # df['Nombre Ente Principal'] = df['Nombre Ente Principal'].astype('object')
 
-            df2 = df.loc[(df['coste_efectivo_PC'] == df['coste_efectivo_PC'].quantile(0.75 , interpolation='nearest')) | \
-                         (df['coste_efectivo_PC'] == df['coste_efectivo_PC'].quantile(0.50 , interpolation='nearest')) | \
-                         (df['coste_efectivo_PC'] == df['coste_efectivo_PC'].quantile(0.25 , interpolation='nearest'))]
+            df2 = df.loc[(df['coste_efectivo_PC'] == df['coste_efectivo_PC'].quantile(0.76 , interpolation='nearest')) | \
+                         (df['coste_efectivo_PC'] == df['coste_efectivo_PC'].quantile(0.53 , interpolation='nearest')) | \
+                         (df['coste_efectivo_PC'] == df['coste_efectivo_PC'].quantile(0.22 , interpolation='nearest'))]
 
             df2 = df2.sort_values(by='coste_efectivo_PC' , ascending=False)
             df2.drop_duplicates(subset='coste_efectivo_PC' , keep='last' , inplace=True)
@@ -1001,7 +1001,7 @@ def make_individual_figure(CCAA_types, PROV_types,municipio_types, main_graph):
         fig = go.Figure()
         fig.add_trace(go.Bar(x=df['Descripción'] , y=df['coste_efectivo_PC'] , name=f'{municipio_types}' ,
                              marker_color='rgb(55, 83, 109)'))
-        fig.add_trace(go.Bar(x=df2['Descripción'] , y=df2['coste_efectivo_PC'] , name=f'Mediana Municipios con {cohorte} hab.' ,
+        fig.add_trace(go.Bar(x=df2['Descripción'] , y=df2['coste_efectivo_PC'] , name=f'Media Municipios con {cohorte} hab.' ,
                              marker_color='rgb(26, 118, 255)'))
 
 

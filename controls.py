@@ -98,10 +98,10 @@ df_count_c_new=df_count_c.loc[(df_count_c['PC_TOTAL']==df_count_c['PC_TOTAL'].qu
                 (df_count_c['PC_TOTAL']==df_count_c['PC_TOTAL'].quantile(0.75, interpolation='nearest'))|\
                  (df_count_c['PC_TOTAL']==df_count_c['PC_TOTAL'].quantile(0.25, interpolation='nearest'))]
 
-df_count_cn=df_count_c_new.append(df_count_c.loc[df_count_c['PC_TOTAL']==df_count_c['PC_TOTAL'].quantile(0.50, interpolation='nearest')])
+df_count_cn=df_count_c_new.append(df_count_c.loc[df_count_c['PC_TOTAL']==df_count_c['PC_TOTAL'].quantile(0.54, interpolation='nearest')])
 
 df_count_c_new_n=df_count_c.loc[(df_count_c['PC_TOTAL']==df_count_c['PC_TOTAL'].quantile(0.75, interpolation='nearest'))|\
-                (df_count_c['PC_TOTAL']==df_count_c['PC_TOTAL'].quantile(0.50, interpolation='nearest'))|\
+                (df_count_c['PC_TOTAL']==df_count_c['PC_TOTAL'].quantile(0.54, interpolation='nearest'))|\
                  (df_count_c['PC_TOTAL']==df_count_c['PC_TOTAL'].quantile(0.25, interpolation='nearest'))]
 
 
