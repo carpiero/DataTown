@@ -714,7 +714,7 @@ def make_count_figure(CCAA_types, PROV_types,municipio_types,partida_de_coste_ty
                       bargap=0.55 ,  # gap between bars of adjacent location coordinates.
                       # bargroupgap=0.1,  # gap between bars of the same location coordinate.
                       autosize=True,showlegend=True,paper_bgcolor="#F9F9F9",title_font_color='rgb(50, 50, 50)')
-    
+
     fig.update_layout(yaxis=dict(gridcolor='#cacaca') ,
                       xaxis=dict(showline=True ,linecolor='#929292' ,linewidth=0.5),
                       plot_bgcolor="#F9F9F9")
