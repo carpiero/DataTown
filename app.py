@@ -720,7 +720,7 @@ def make_count_figure(CCAA_types, PROV_types,municipio_types,partida_de_coste_ty
                           x=1 ,
                           y=1 ,font_color='rgb(50, 50, 50)',
                           # bgcolor='rgba(255, 255, 255, 0)' ,
-                          # bordercolor='rgba(255, 255, 255, 0)',
+                          bgcolor='#eeeeee',
                           font_size=14, #bgcolor="#e5ecf6",bordercolor="Black",
                       ) ,
                       barmode='relative' ,
@@ -1040,7 +1040,7 @@ def make_individual_figure(CCAA_types, PROV_types,municipio_types, main_graph):
                               y=0.9 ,font_color='rgb(50, 50, 50)',
                               # bgcolor='rgba(255, 255, 255, 0)' ,
                               # bordercolor='rgba(255, 255, 255, 0)',
-                              font_size=14,bgcolor="#F9F9F9",
+                              font_size=14,bgcolor='#eeeeee',
         # bordercolor="Black",
         # borderwidth=0.8
                           ) ,
