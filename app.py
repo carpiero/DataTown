@@ -706,15 +706,19 @@ def make_count_figure(CCAA_types, PROV_types,municipio_types,partida_de_coste_ty
                           title='Coste efectivo €/hab.' ,
                           titlefont_size=16 ,
                           tickfont_size=12 ,showticklabels=True,
-                      ) ,
+                          color='rgb(50, 50, 50)',
+                             ) ,
                       xaxis=dict(
                           titlefont_size=16 ,
                           tickfont_size=14 , showticklabels=True ,
-                      ) ,
+                          gridcolor='black',
+                          color='rgb(50, 50, 50)',
+                            showgrid=False,showline=False,
+                             ) ,
 
                       legend=dict(
                           x=1 ,
-                          y=1 ,
+                          y=1 ,font_color='rgb(50, 50, 50)',
                           # bgcolor='rgba(255, 255, 255, 0)' ,
                           # bordercolor='rgba(255, 255, 255, 0)',
                           font_size=14, #bgcolor="#e5ecf6",bordercolor="Black",
@@ -722,7 +726,11 @@ def make_count_figure(CCAA_types, PROV_types,municipio_types,partida_de_coste_ty
                       barmode='relative' ,
                       bargap=0.55 ,  # gap between bars of adjacent location coordinates.
                       # bargroupgap=0.1,  # gap between bars of the same location coordinate.
-                      autosize=True,showlegend=True)
+                      autosize=True,showlegend=True,paper_bgcolor="#F9F9F9",title_font_color='rgb(50, 50, 50)')
+
+    fig.update_layout(yaxis=dict(gridcolor='#cacaca') ,
+                      xaxis=dict(showline=True ,linecolor='#929292' ,linewidth=0.5),
+                      plot_bgcolor="#F9F9F9")
 
     return fig
 
@@ -776,7 +784,7 @@ def make_main_figure(CCAA_types, PROV_types,municipio_types,partida_de_coste_typ
                             align=['center'] ,
                             font=dict(color='white' , size=15)) ,
                 cells=dict(values=[df_table] ,
-                           fill_color='white' ,
+                           fill_color='#f9f9f9' ,
                            font=dict(color='white' , size=13) ,
                            align=['left' , 'center']))
             )
@@ -801,7 +809,7 @@ def make_main_figure(CCAA_types, PROV_types,municipio_types,partida_de_coste_typ
                     align=['left' , 'center'] ,
                     font=dict(color='white' , size=15)) ,
                 cells=dict(values=[df_table['Unidades físicas de referencia'] , df_table['Nº unidades']] ,
-                           fill_color='#f2f2f2' ,font=dict(color='rgb(55, 83, 109)' , size=13),line_width=5,height=30,
+                           fill_color='#f2f2f2' ,font=dict(color='rgb(50, 50, 50)' , size=13),line_width=5,height=30,
                            align=['left' , 'center']))
             )
 
@@ -825,7 +833,7 @@ def make_main_figure(CCAA_types, PROV_types,municipio_types,partida_de_coste_typ
                     align=['left' , 'center'] ,
                     font=dict(color='white' , size=15)) ,
                 cells=dict(values=[df_table['Unidades físicas de referencia'] , df_table['Nº unidades']] ,
-                           fill_color='#f2f2f2' ,font=dict(color='rgb(55, 83, 109)' , size=13),line_width=5,height=30,
+                           fill_color='#f2f2f2' ,font=dict(color='rgb(50, 50, 50)' , size=13),line_width=5,height=30,
                            align=['left' , 'center']))
             )
 
@@ -849,7 +857,7 @@ def make_main_figure(CCAA_types, PROV_types,municipio_types,partida_de_coste_typ
                     align=['left' , 'center'] ,
                     font=dict(color='white' , size=15)) ,
                 cells=dict(values=[df_table['Unidades físicas de referencia'] , df_table['Nº unidades']] ,
-                           fill_color='#f2f2f2' ,font=dict(color='rgb(55, 83, 109)' , size=13),line_width=5,height=30,
+                           fill_color='#f2f2f2' ,font=dict(color='rgb(50, 50, 50)' , size=13),line_width=5,height=30,
                            align=['left' , 'center']))
             )
 
@@ -873,7 +881,7 @@ def make_main_figure(CCAA_types, PROV_types,municipio_types,partida_de_coste_typ
                     align=['left' , 'center'] ,
                     font=dict(color='white' , size=15)) ,
                 cells=dict(values=[df_table['Unidades físicas de referencia'] , df_table['Nº unidades']] ,
-                           fill_color='#f2f2f2' ,font=dict(color='rgb(55, 83, 109)' , size=13),line_width=5,height=30,
+                           fill_color='#f2f2f2' ,font=dict(color='rgb(50, 50, 50)' , size=13),line_width=5,height=30,
                            align=['left' , 'center']))
             )
 
@@ -895,7 +903,7 @@ def make_main_figure(CCAA_types, PROV_types,municipio_types,partida_de_coste_typ
                             align=['left','center'],
                             font=dict(color='white', size=15)) ,
                 cells=dict(values=[df_table['Unidades físicas de referencia'],df_table['Nº unidades']] ,
-                           fill_color='#f2f2f2' ,font=dict(color='rgb(55, 83, 109)' , size=13),line_width=5,height=30,
+                           fill_color='#f2f2f2' ,font=dict(color='rgb(50, 50, 50)' , size=13),line_width=5,height=30,
                            align=['left','center']))
             )
 
@@ -907,6 +915,7 @@ def make_main_figure(CCAA_types, PROV_types,municipio_types,partida_de_coste_typ
 
 
     fig.update_layout(margin=dict(l=20 , r=20 , t=60 , b=20),title='Indicadores por Partida de coste')
+    fig.update_layout(plot_bgcolor="#F9F9F9" ,paper_bgcolor="#F9F9F9" , title_font_color='rgb(50, 50, 50)')
 
     return fig
 
@@ -1014,20 +1023,24 @@ def make_individual_figure(CCAA_types, PROV_types,municipio_types, main_graph):
                           yaxis=dict(
                               title='Coste €/hab.' ,
                               titlefont_size=16 ,
-                              tickfont_size=12 ,showticklabels=True,
+                              tickfont_size=12 ,showticklabels=True,color='rgb(50, 50, 50)',
+
                           ) ,
                           xaxis=dict(
                               title='Partidas de Costes' ,
                               titlefont_size=16 ,
-                              tickfont_size=14 , showticklabels=False ,
+                              tickfont_size=14 , showticklabels=False ,color='rgb(50, 50, 50)',
+                            showline=False,
+                            showgrid=False,
+
                           ) ,
 
                           legend=dict(
                               x=0.40 ,
-                              y=0.9 ,
+                              y=0.9 ,font_color='rgb(50, 50, 50)',
                               # bgcolor='rgba(255, 255, 255, 0)' ,
                               # bordercolor='rgba(255, 255, 255, 0)',
-                              font_size=14,bgcolor="#e5ecf6",
+                              font_size=14,bgcolor="#F9F9F9",
         # bordercolor="Black",
         # borderwidth=0.8
                           ) ,
@@ -1035,9 +1048,13 @@ def make_individual_figure(CCAA_types, PROV_types,municipio_types, main_graph):
                           # bargap=0.30 ,
                           # bargroupgap=0.35  ,
                         bargap = 0.10 ,  # gap between bars of adjacent location coordinates.
-                        bargroupgap = 0.25  # gap between bars of the same location coordinate.
+                        bargroupgap = 0.25 , # gap between bars of the same location coordinate.
 
-                          )
+                          paper_bgcolor="#F9F9F9",title_font_color='rgb(50, 50, 50)')
+
+    fig.update_layout(yaxis=dict(gridcolor='#cacaca') ,
+                      xaxis=dict(showline=True ,linecolor='#929292' ,linewidth=0.5),
+                      plot_bgcolor="#F9F9F9")
 
     return fig
 
@@ -1537,8 +1554,8 @@ def make_map_figure(CCAA_types, PROV_types,municipio_types,partida_de_coste_type
     # fig.update_layout(mapbox_style="mapbox://styles/carpiero/ckg7tt9cb5vyo19mkwwg6nmf0" , mapbox_accesstoken=token)
     fig.update_layout(coloraxis_colorbar=dict(title='',title_font_size=15,tickfont_size=14,
         thicknessmode="pixels" , thickness=20 ,
-        lenmode="pixels" , len=350 , bgcolor='#f9f9f9',tickformat="n:,",borderwidth=0,
-                ),coloraxis_reversescale=True)
+        lenmode="pixels" , len=350 , bgcolor='#eeeeee',tickformat="n:,",borderwidth=0,
+                ),coloraxis_reversescale=True,plot_bgcolor="#F9F9F9",paper_bgcolor="#F9F9F9",title_font_color='rgb(50, 50, 50)')
 
     fig.update_layout(margin={"r": 20 , "t": 40 , "l": 20 , "b": 20})
     if partida_de_coste_types == 'TODOS':
