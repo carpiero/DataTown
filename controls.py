@@ -1,11 +1,6 @@
 import pandas as pd
 import geopandas
 
-# df_indicadores_pob = pd.read_parquet(f'./data/processed/df_indicadores_pob.parquet')
-# df_final_pob = pd.read_parquet('./data/processed/df_final_pob.parquet')
-# df_final_pob_melt = pd.read_parquet('./data/processed/df_final_pob_melt.parquet')
-# df_final_pob_melt_PC = pd.read_parquet('./data/processed/df_final_pob_melt_PC.parquet')
-# df_indicadores_pob_pivot = pd.read_parquet('./data/processed/df_indicadores_pob_pivot.parquet')
 
 df_indicadores_pob = pd.read_parquet(f'./data/main_processed/df_indicadores_pob.parquet')
 df_final_pob = pd.read_parquet('./data/main_processed/df_final_pob.parquet')
@@ -28,9 +23,8 @@ df_final_pob_poblaciontext=pd.read_parquet('./data/main_processed/df_final_pob_p
 
 
 
-#################
+#################  Dropdown
 
-# df_final_pob_melt_PC['Descripción'] = df_final_pob_melt_PC['Descripción'].str.replace(r'^...' , '')
 
 
 CCAA=sorted(df_final_pob['CCAA'].unique().to_list())
@@ -137,18 +131,6 @@ df_count_m_pc['Nombre Ente Principal'] = df_count_m_pc['Nombre Ente Principal'].
 
 import json
 
-# with open('./data/processed/shapefiles_espana_municipios.geojson') as response:
-#     counties = json.load(response)
-
-# with open('./data/main_raw/shapefiles_espana_municipios.geojson') as response:
-#     counties = json.load(response)
-
-
-# CCAA_CO = pd.read_parquet('./data/processed/CCAA_CO.parquet')
-# PROV_CO = pd.read_parquet('./data/processed/PROV_CO.parquet')
-# MUNI_CO = pd.read_parquet('./data/processed/MUNI_CO.parquet')
-#
-# df_zoom_pob = geopandas.read_file('./data/processed/shapefiles_espana_municipios.geojson')
 
 CCAA_CO = pd.read_parquet('./data/main_processed/CCAA_CO.parquet')
 PROV_CO = pd.read_parquet('./data/main_processed/PROV_CO.parquet')
