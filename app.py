@@ -924,19 +924,38 @@ def make_main_figure(CCAA_types, PROV_types,municipio_types,partida_de_coste_typ
 
 @app.callback(Output("individual_graph", "figure"),
     [
-        Input("CCAA_types" , "value") , Input("PROV_types" , "value") , Input("municipio_types" , "value")
+        Input("CCAA_types" , "value") , Input("PROV_types" , "value") , Input("municipio_types" , "value"),Input("partida_de_coste_types" , "value")
     ],[State("main_graph", "relayoutData")]
     # [State("lock_selector", "value"), State("main_graph", "relayoutData")],
 )
-def make_individual_figure(CCAA_types, PROV_types,municipio_types, main_graph):
+def make_individual_figure(CCAA_types, PROV_types,municipio_types, partida_de_coste_types,main_graph):
 
     if CCAA_types == 'TODAS' and PROV_types == 'TODAS' and municipio_types == 'TODOS':
 
         df = df_n
 
         fig = go.Figure()
-        fig.add_trace(go.Bar(x=df['Descripción'] ,y=df['coste_efectivo_new'] ,name='Total Nacional' ,marker_color='rgb(55, 83, 109)'))
-        fig.add_trace(go.Bar(x=df['Descripción'] ,y=df['coste_efectivo_new'] ,name='Total Nacional' ,marker_color='rgb(26, 118, 255)'))
+        # fig.add_trace(go.Bar(x=df['Descripción'] ,y=df['coste_efectivo_new'] ,name='Total Nacional' ,marker_color='rgb(55, 83, 109)'))
+        # fig.add_trace(go.Bar(x=df['Descripción'] ,y=df['coste_efectivo_new'] ,name='Total Nacional' ,marker_color='rgb(26, 118, 255)'))
+
+        if partida_de_coste_types !='TODOS':
+            colors = ['rgb(55, 83, 109)'] * df['Descripción'].shape[0]
+            df['Descripción'].to_list()
+            for pos , item in enumerate(df['Descripción'].to_list()):
+                if item == partida_de_coste_types:
+                    colors[pos] = 'rgb(217, 95, 2)'
+            fig.add_trace(go.Bar(x=df['Descripción'] , y=df['coste_efectivo_new'] , name='Total Nacional',
+                                 marker_color=colors))
+
+        else:
+            fig.add_trace(go.Bar(x=df['Descripción'] , y=df['coste_efectivo_new'] , name='Total Nacional',
+                                 marker_color='rgb(55, 83, 109)'))
+
+        fig.add_trace(go.Bar(x=df['Descripción'] , y=df['coste_efectivo_new'] , name='Total Nacional' ,
+                             marker_color='rgb(26, 118, 255)'))
+
+
+
 
     elif CCAA_types != 'TODAS' and PROV_types == 'TODAS' and municipio_types == 'TODOS':
 
@@ -950,8 +969,24 @@ def make_individual_figure(CCAA_types, PROV_types,municipio_types, main_graph):
 
 
         fig = go.Figure()
-        fig.add_trace(go.Bar(x=df2['Descripción'] , y=df2['coste_efectivo_new'] , name=f'{CCAA_types}' ,
-                             marker_color='rgb(55, 83, 109)'))
+        # fig.add_trace(go.Bar(x=df2['Descripción'] , y=df2['coste_efectivo_new'] , name=f'{CCAA_types}' ,
+        #                      marker_color='rgb(55, 83, 109)'))
+        # fig.add_trace(go.Bar(x=df['Descripción'] , y=df['coste_efectivo_new'] , name='Total Nacional' ,
+        #                      marker_color='rgb(26, 118, 255)'))
+
+        if partida_de_coste_types !='TODOS':
+            colors = ['rgb(55, 83, 109)'] * df2['Descripción'].shape[0]
+            df2['Descripción'].to_list()
+            for pos , item in enumerate(df2['Descripción'].to_list()):
+                if item == partida_de_coste_types:
+                    colors[pos] = 'rgb(217, 95, 2)'
+            fig.add_trace(go.Bar(x=df2['Descripción'] , y=df2['coste_efectivo_new'] , name=f'{CCAA_types}' ,
+                                 marker_color=colors))
+
+        else:
+            fig.add_trace(go.Bar(x=df2['Descripción'] , y=df2['coste_efectivo_new'] , name=f'{CCAA_types}' ,
+                                 marker_color='rgb(55, 83, 109)'))
+
         fig.add_trace(go.Bar(x=df['Descripción'] , y=df['coste_efectivo_new'] , name='Total Nacional' ,
                              marker_color='rgb(26, 118, 255)'))
 
@@ -971,10 +1006,32 @@ def make_individual_figure(CCAA_types, PROV_types,municipio_types, main_graph):
 
 
         fig = go.Figure()
-        fig.add_trace(go.Bar(x=df['Descripción'] , y=df['coste_efectivo_new'] , name=f'{PROV_types}' ,
-                             marker_color='rgb(55, 83, 109)'))
+        # fig.add_trace(go.Bar(x=df['Descripción'] , y=df['coste_efectivo_new'] , name=f'{PROV_types}' ,
+        #                      marker_color='rgb(55, 83, 109)'))
+        # fig.add_trace(go.Bar(x=df2['Descripción'] , y=df2['coste_efectivo_new'] , name=f'{CCAA_types}' ,
+        #                      marker_color='rgb(26, 118, 255)'))
+
+
+        if partida_de_coste_types !='TODOS':
+            colors = ['rgb(55, 83, 109)'] * df['Descripción'].shape[0]
+            df['Descripción'].to_list()
+            for pos , item in enumerate(df['Descripción'].to_list()):
+                if item == partida_de_coste_types:
+                    colors[pos] = 'rgb(217, 95, 2)'
+            fig.add_trace(go.Bar(x=df['Descripción'] , y=df['coste_efectivo_new'] , name=f'{PROV_types}',
+                                 marker_color=colors))
+
+        else:
+            fig.add_trace(go.Bar(x=df['Descripción'] , y=df['coste_efectivo_new'] , name=f'{PROV_types}' ,
+                                 marker_color='rgb(55, 83, 109)'))
+
         fig.add_trace(go.Bar(x=df2['Descripción'] , y=df2['coste_efectivo_new'] , name=f'{CCAA_types}' ,
                              marker_color='rgb(26, 118, 255)'))
+
+
+
+
+
 
     elif CCAA_types == 'TODAS' and PROV_types != 'TODAS' and municipio_types == 'TODOS':
 
@@ -987,10 +1044,27 @@ def make_individual_figure(CCAA_types, PROV_types,municipio_types, main_graph):
         df2 = df_n
 
         fig = go.Figure()
-        fig.add_trace(go.Bar(x=df['Descripción'] , y=df['coste_efectivo_new'] , name=f'{PROV_types}' ,
-                             marker_color='rgb(55, 83, 109)'))
+        # fig.add_trace(go.Bar(x=df['Descripción'] , y=df['coste_efectivo_new'] , name=f'{PROV_types}' ,
+        #                      marker_color='rgb(55, 83, 109)'))
+        # fig.add_trace(go.Bar(x=df2['Descripción'] , y=df2['coste_efectivo_new'] , name=f'Total Nacional' ,
+        #                      marker_color='rgb(26, 118, 255)'))
+
+        if partida_de_coste_types !='TODOS':
+            colors = ['rgb(55, 83, 109)'] * df['Descripción'].shape[0]
+            df['Descripción'].to_list()
+            for pos , item in enumerate(df['Descripción'].to_list()):
+                if item == partida_de_coste_types:
+                    colors[pos] = 'rgb(217, 95, 2)'
+            fig.add_trace(go.Bar(x=df['Descripción'] , y=df['coste_efectivo_new'] , name=f'{PROV_types}',
+                                 marker_color=colors))
+
+        else:
+            fig.add_trace(go.Bar(x=df['Descripción'] , y=df['coste_efectivo_new'] , name=f'{PROV_types}' ,
+                                 marker_color='rgb(55, 83, 109)'))
+
         fig.add_trace(go.Bar(x=df2['Descripción'] , y=df2['coste_efectivo_new'] , name=f'Total Nacional' ,
                              marker_color='rgb(26, 118, 255)'))
+
 
     else:
         df =df_m.loc[df_m['Nombre Ente Principal'] == municipio_types].sort_values(by='coste_efectivo_PC',ascending=False)
@@ -1008,10 +1082,28 @@ def make_individual_figure(CCAA_types, PROV_types,municipio_types, main_graph):
 
 
         fig = go.Figure()
-        fig.add_trace(go.Bar(x=df['Descripción'] , y=df['coste_efectivo_PC'] , name=f'{municipio_types}' ,
-                             marker_color='rgb(55, 83, 109)'))
+        # fig.add_trace(go.Bar(x=df['Descripción'] , y=df['coste_efectivo_PC'] , name=f'{municipio_types}' ,
+        #                      marker_color='rgb(55, 83, 109)'))
+        # fig.add_trace(go.Bar(x=df2['Descripción'] , y=df2['coste_efectivo_PC'] , name=f'Media Municipios con {cohorte} hab.' ,
+        #                      marker_color='rgb(26, 118, 255)'))
+
+
+        if partida_de_coste_types !='TODOS':
+            colors = ['rgb(55, 83, 109)'] * df['Descripción'].shape[0]
+            df['Descripción'].to_list()
+            for pos , item in enumerate(df['Descripción'].to_list()):
+                if item == partida_de_coste_types:
+                    colors[pos] = 'rgb(217, 95, 2)'
+            fig.add_trace(go.Bar(x=df['Descripción'] , y=df['coste_efectivo_PC'] , name=f'{municipio_types}',
+                                 marker_color=colors))
+
+        else:
+            fig.add_trace(go.Bar(x=df['Descripción'] , y=df['coste_efectivo_PC'] , name=f'{municipio_types}' ,
+                                 marker_color='rgb(55, 83, 109)'))
+
         fig.add_trace(go.Bar(x=df2['Descripción'] , y=df2['coste_efectivo_PC'] , name=f'Media Municipios con {cohorte} hab.' ,
                              marker_color='rgb(26, 118, 255)'))
+
 
 
 
