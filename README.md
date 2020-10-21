@@ -89,6 +89,6 @@ In addition, when you enter a wrong unemployed argument, the terminal prints a n
         └── results
 ```
 
-
+![animated1](assets/readme.gif)
 
 

@@ -50,18 +50,18 @@ app.layout = html.Div(
         html.Div(
             [
                 # html.Div(
-                #     # [
-                #     #     html.Img(
-                #     #         src=app.get_asset_url("dash-logo.png"),
-                #     #         id="plotly-image",
-                #     #         style={
-                #     #             "height": "60px",
-                #     #             "width": "auto",
-                #     #             "margin-bottom": "25px",
-                #     #         },
-                #     #     )
-                #     # ],
-                #     # className="one-third column",
+                #     [
+                #         html.Img(
+                #             src=app.get_asset_url("25231.svg"),
+                #             id="plotly-image",
+                #             style={
+                #                 "height": "60px",
+                #                 "width": "auto",
+                #                 "margin-bottom": "25px",
+                #             },
+                #         )
+                #     ],
+                #     className="one-third column",
                 # ),
                 html.Div(
                     [
@@ -80,12 +80,23 @@ app.layout = html.Div(
                     className="one-half column",
                     id="title",
                 ),
+                
                 html.Div(
                     [
+                        html.Img(
+                            src=app.get_asset_url("25231.svg"),
+                            id="plotly-image",
+                            style={
+                                "height": "25px",
+                                "width": "auto",
+                                'float': 'right','margin-top':'35px'
+                            },
+                        ),
                         html.A(
                             html.Button("Learn More", id="learn-more-button"),
                             href="https://github.com/carpiero/DataTown",
-                        )
+                        ),
+
                     ],
                     className="one-third column",
                     id="button",
