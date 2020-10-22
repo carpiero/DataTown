@@ -80,7 +80,7 @@ app.layout = html.Div(
                     className="one-half column",
                     id="title",
                 ),
-                
+
                 html.Div(
                     [
                         html.Img(
