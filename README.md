@@ -10,17 +10,19 @@
 
 ## :raising_hand: **CESEL DASHBOARD** 
 
-##### CESEL: 
+#### CESEL: 
 Effective Cost of the Services of the Local Entities(municipality) in Spain, which includes complete and disaggregated information on the number of services provided (measured based on a series of 85 indicators or physical units of reference) and their cost ( disaggregated into 43 municipal competencies or services), covering practically all of the existing municipal services.
 
 This database is managed by the Ministry of Finance (Subdirección General de Estudios Financieros de Entidades Locales de la Secretaría General de Financiación Autonómica y Local del Ministerio de Hacienda) and has its origin in the Law 27/2013, of December 27 that introduced article 116 ter, in the Law Regulating the Bases of the Local Regime of 1985 (Ley Reguladora de las Bases del Régimen Local de 1985).
 
 The database extends to all the Spanish municipalities.
 
+
 ## :chart_with_upwards_trend: **URL** 
 
 
 ### [DataTown](https://www.datatown.es/)  
+#### https://www.datatown.es
 
 
 ## :floppy_disk: **Data:**
@@ -34,7 +36,7 @@ There are 2 different datasource involved:
 
 ## :newspaper: **Insights:**
 
-#### Goal
+### Goal
 
 The process known as “benchmarking” (copying from the best) has been revealed as an important tool to improve results in the provision of public services. As its most important advantages have been pointed out (Philips, 2018):
 
@@ -52,7 +54,7 @@ The process known as “benchmarking” (copying from the best) has been reveale
 
 This process requires a series of phases (Philips, 2018):
 
-•	Capture information.
+• Capture information.
 
 • Generate meaningful comparisons or case studies.
 
@@ -60,7 +62,7 @@ This process requires a series of phases (Philips, 2018):
 
 The work tries to advance in the second phase (generate meaningful comparisons) by observing an interactive dashboard, based on the information contained in CESEL. The dashboard can serve as a guide so that municipalities can compare themselves with the average values of their population stratum, so that they can serve as “benchmarking” in order to optimize the use of resources and check that they are in line with preferences of its citizens.
 
-#### 2018
+### 2018
 
 85% municipalities in Spain have less than 5000 citizens and represent 12% of the population.
 
@@ -75,9 +77,9 @@ This aggregation measure would only save costs for municipalities with less than
 
 ## :see_no_evil: **Usage**
 
-#### Getting Started
+### Getting Started
 
-##### Running the app locally
+#### Running the app locally
 
 First create a virtual environment with conda or venv inside a temp folder, then activate it.
 
@@ -103,7 +105,7 @@ Run the app
 python app.py
 ```
 
-#### Built With
+### Built With
 
 - [Dash](https://dash.plot.ly/) - Main server and interactive components
 - [Plotly Python](https://plot.ly/python/) - Used to create the interactive plots
