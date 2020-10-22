@@ -84,7 +84,7 @@ app.layout = html.Div(
                 html.Div(
                     [
                         html.Img(
-                            src=app.get_asset_url("25231.svg"),
+                            src=app.get_asset_url("github.svg"),
                             id="plotly-image",
                             style={
                                 "height": "25px",
@@ -176,7 +176,7 @@ app.layout = html.Div(
                             className="row container-display",
                         ),
                         html.Div(
-                            [dcc.Graph(id="count_graph",config = {'displayModeBar': False})],
+                            [dcc.Graph(id="percentil_graph",config = {'displayModeBar': False})],
                             id="countGraphContainer",
                             className="pretty_container",style={'min-height': '280px'},
                         ),
@@ -190,11 +190,11 @@ app.layout = html.Div(
         html.Div(
             [
                 html.Div(
-                    [dcc.Graph(id="main_graph",config = {'displayModeBar': False})],
+                    [dcc.Graph(id="indicadores_table",config = {'displayModeBar': False})],
                     className="pretty_container four columns",#style={'width': '34.2%'}
                 ),
                 html.Div(
-                    [dcc.Graph(id="individual_graph",config = {'displayModeBar': False})],
+                    [dcc.Graph(id="coste_bars_graph",config = {'displayModeBar': False})],
                     className="pretty_container eight columns",#style={'width': '65.8%'}
                 ),
             ],
@@ -218,7 +218,7 @@ app.layout = html.Div(
 app.clientside_callback(
     ClientsideFunction(namespace="clientside", function_name="resize"),
     Output("output-clientside", "children"),
-    [Input("count_graph", "figure")],
+    [Input("percentil_graph", "figure")],
 )
 
 
@@ -441,16 +441,16 @@ def update_text(CCAA_types, PROV_types,municipio_types,partida_de_coste_types ):
 
 
 
-################    count graph
+################   percentil_graph graph
 @app.callback(
-    Output("count_graph", "figure"),
+    Output("percentil_graph", "figure"),
     [
         Input("CCAA_types" , "value") , Input("PROV_types" , "value") , Input("municipio_types" , "value") ,
         Input("partida_de_coste_types" , "value")
-    ],[State("main_graph", "relayoutData")]
-    # [State("lock_selector", "value"), State("main_graph", "relayoutData")],
+    ],[State("indicadores_table", "relayoutData")]
+    # [State("lock_selector", "value"), State("indicadores_table", "relayoutData")],
 )
-def make_count_figure(CCAA_types, PROV_types,municipio_types,partida_de_coste_types, main_graph):
+def make_percentil_graph_figure(CCAA_types, PROV_types,municipio_types,partida_de_coste_types, indicadores_table):
     if partida_de_coste_types == 'TODOS':
         if CCAA_types == 'TODAS' and PROV_types == 'TODAS' and municipio_types == 'TODOS':
             df = df_count_cn
@@ -735,16 +735,16 @@ def make_count_figure(CCAA_types, PROV_types,municipio_types,partida_de_coste_ty
 
 
 
-################    main graph
+################    indicadores_table graph
 @app.callback(
-    Output("main_graph", "figure"),
+    Output("indicadores_table", "figure"),
     [
         Input("CCAA_types" , "value") , Input("PROV_types" , "value") , Input("municipio_types" , "value") ,
         Input("partida_de_coste_types" , "value")
-    ],[State("main_graph", "relayoutData")]
-    # [State("lock_selector", "value"), State("main_graph", "relayoutData")],
+    ],[State("indicadores_table", "relayoutData")]
+    # [State("lock_selector", "value"), State("indicadores_table", "relayoutData")],
 )
-def make_main_figure(CCAA_types, PROV_types,municipio_types,partida_de_coste_types, main_graph):
+def make_indicadores_table_figure(CCAA_types, PROV_types,municipio_types,partida_de_coste_types, indicadores_table):
     if partida_de_coste_types == 'TODOS':
         # if partida_de_coste_types == 'TODOS' and municipio_types != 'TODOS':
         #
@@ -918,15 +918,15 @@ def make_main_figure(CCAA_types, PROV_types,municipio_types,partida_de_coste_typ
     return fig
 
 
-################    individual graph
+################    coste_bars graph
 
-@app.callback(Output("individual_graph", "figure"),
+@app.callback(Output("coste_bars_graph", "figure"),
     [
         Input("CCAA_types" , "value") , Input("PROV_types" , "value") , Input("municipio_types" , "value"),Input("partida_de_coste_types" , "value")
-    ],[State("main_graph", "relayoutData")]
-    # [State("lock_selector", "value"), State("main_graph", "relayoutData")],
+    ],[State("indicadores_table", "relayoutData")]
+    # [State("lock_selector", "value"), State("indicadores_table", "relayoutData")],
 )
-def make_individual_figure(CCAA_types, PROV_types,municipio_types, partida_de_coste_types,main_graph):
+def make_coste_bars_figure(CCAA_types, PROV_types,municipio_types, partida_de_coste_types,indicadores_table):
 
     if CCAA_types == 'TODAS' and PROV_types == 'TODAS' and municipio_types == 'TODOS':
 
@@ -948,7 +948,7 @@ def make_individual_figure(CCAA_types, PROV_types,municipio_types, partida_de_co
 
             line = int(df.loc[df['Descripción'] == partida_de_coste_types , 'coste_efectivo_new'])
             fig.add_trace(go.Scatter(x=df['Descripción'] , y=[line] * df['Descripción'].shape[0] , showlegend=False ,hoverinfo='skip',
-                                     line=dict(color='rgb(217, 95, 2)' , width=1.5 , dash='dash')))
+                                     line=dict(color='rgb(217, 95, 2)' , width=0.8 , dash='solid')))
 
 
         else:
@@ -994,7 +994,7 @@ def make_individual_figure(CCAA_types, PROV_types,municipio_types, partida_de_co
 
             line=int(df2.loc[df2['Descripción'] == partida_de_coste_types , 'coste_efectivo_new'])
             fig.add_trace(go.Scatter(x=df['Descripción'] , y=[line] * df['Descripción'].shape[0] , showlegend=False ,hoverinfo='skip',
-                                     line=dict(color='rgb(217, 95, 2)' , width=1.5 , dash='dash')))
+                                     line=dict(color='rgb(217, 95, 2)' , width=0.8 , dash='solid')))
 
         else:
             fig.add_trace(go.Bar(x=df2['Descripción'] , y=df2['coste_efectivo_new'] , name=f'{CCAA_types}' ,
@@ -1036,7 +1036,7 @@ def make_individual_figure(CCAA_types, PROV_types,municipio_types, partida_de_co
 
             line = int(df.loc[df['Descripción'] == partida_de_coste_types , 'coste_efectivo_new'])
             fig.add_trace(go.Scatter(x=df2['Descripción'] , y=[line] * df2['Descripción'].shape[0], showlegend=False ,hoverinfo='skip',
-                                     line=dict(color='rgb(217, 95, 2)' , width=1.5 , dash='dash')))
+                                     line=dict(color='rgb(217, 95, 2)' ,width=0.8 , dash='solid')))
 
         else:
             fig.add_trace(go.Bar(x=df['Descripción'] , y=df['coste_efectivo_new'] , name=f'{PROV_types}' ,
@@ -1077,7 +1077,7 @@ def make_individual_figure(CCAA_types, PROV_types,municipio_types, partida_de_co
 
             line = int(df.loc[df['Descripción'] == partida_de_coste_types , 'coste_efectivo_new'])
             fig.add_trace(go.Scatter(x=df2['Descripción'] , y=[line] * df2['Descripción'].shape[0] , showlegend=False ,hoverinfo='skip',
-                                     line=dict(color='rgb(217, 95, 2)' , width=1.5 , dash='dash')))
+                                     line=dict(color='rgb(217, 95, 2)' , width=0.8 , dash='solid')))
 
         else:
             fig.add_trace(go.Bar(x=df['Descripción'] , y=df['coste_efectivo_new'] , name=f'{PROV_types}' ,
@@ -1122,7 +1122,7 @@ def make_individual_figure(CCAA_types, PROV_types,municipio_types, partida_de_co
 
 
             fig.add_trace(go.Scatter(x=df2['Descripción'] , y=[line] * df2['Descripción'].shape[0], showlegend=False ,hoverinfo='skip',
-                                     line=dict(color='rgb(217, 95, 2)' , width=1.5 , dash='dash')))
+                                     line=dict(color='rgb(217, 95, 2)' , width=0.8 , dash='solid')))
 
         else:
             fig.add_trace(go.Bar(x=df['Descripción'] , y=df['coste_efectivo_PC'] , name=f'{municipio_types}' ,
@@ -1183,10 +1183,10 @@ def make_individual_figure(CCAA_types, PROV_types,municipio_types, partida_de_co
     [
         Input("CCAA_types" , "value") , Input("PROV_types" , "value") , Input("municipio_types" , "value") ,
         Input("partida_de_coste_types" , "value")
-    ],[State("main_graph", "relayoutData")]
-    # [State("lock_selector", "value"), State("main_graph", "relayoutData")],
+    ],[State("indicadores_table", "relayoutData")]
+    # [State("lock_selector", "value"), State("indicadores_table", "relayoutData")],
 )
-def make_map_figure(CCAA_types, PROV_types,municipio_types,partida_de_coste_types, main_graph):
+def make_map_figure(CCAA_types, PROV_types,municipio_types,partida_de_coste_types, indicadores_table):
     if partida_de_coste_types == 'TODOS':
         if CCAA_types == 'TODAS' and PROV_types == 'TODAS' and municipio_types == 'TODOS':
             df = df_final_pob_round#[df_final_pob['Población']>5000]

@@ -62,13 +62,13 @@ body {
   display: flex;
 }
 
-#individual_graph,
+#coste_bars_graph,
 #aggregate_graph {
   width: calc(100% - 30px);
   position: absolute;
 }
 
-#count_graph {
+#percentil_graph {
   position: absolute;
   height: calc(100% - 30px);
   width: calc(100% - 30px);

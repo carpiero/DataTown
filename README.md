@@ -1,94 +1,173 @@
-# Ironhack Data Analytics M1 Project README file
+#:house_with_garden: DataTown
 
 
 
-![Image](https://res.cloudinary.com/springboard-images/image/upload/q_auto,f_auto,fl_lossy/wordpress/2019/05/aiexcerpt.png)
+![Image](assets/Madrid.jpg)
 
 ---
 
 
 
-### :raising_hand: **Jobs Survey Reporting** 
+### :raising_hand: **CESEL DASHBOARD** 
+
+CESEL: 
+Effective Cost of the Services of the Local Entities(municipality) in Spain, which includes complete and disaggregated information on the number of services provided (measured based on a series of 85 indicators or physical units of reference) and their cost ( disaggregated into 43 municipal competencies or services), covering practically all of the existing municipal services.
+
+This database is managed by the Ministry of Finance (Subdirección General de Estudios Financieros de Entidades Locales de la Secretaría General de Financiación Autonómica y Local del Ministerio de Hacienda) and has its origin in the Law 27/2013, of December 27 that introduced article 116 ter, in the Law Regulating the Bases of the Local Regime of 1985 (Ley Reguladora de las Bases del Régimen Local de 1985).
+
+The database extends to all the Spanish municipalities.
+
+### :chart_with_upwards_trend: **URL** 
 
 
-### :baby: **Status**
-Ironhack Data Analytics M1 Project
+####[DataTown](https://www.datatown.es/)  
 
-### :running: **One-liner**
+
+## :floppy_disk: **Data:**
+
+There are 2 different datasource involved:
+
+- **CESEL.** [Here](https://serviciostelematicosext.hacienda.gob.es/sgcief/Cesel/Consulta/mapa/ConsultaMapa.aspx) you can find the main dataset.
+
+- **INE.** [Here](https://www.ine.es/dynt3/inebase/es/index.htm?padre=517&capsel=525) you can find the population of each municipality in Spain.
+
+
+## :newspaper: **Insights:**
+
+####Goal
+
+The process known as “benchmarking” (copying from the best) has been revealed as an important tool to improve results in the provision of public services. As its most important advantages have been pointed out (Philips, 2018):
+
+• Objectively evaluate the performance of the public sector
+
+• Reveal areas where improvement is needed
+
+• Identify the best performing regions, municipalities or suppliers and improve the dissemination and adoption of "best practices"
+
+• Check if pilot projects and certain technologies have been successful
+
+• Assist in the preparation of government budgets at the central and sub-central level
+
+• Hold governments and service providers accountable to citizens and establish a common yardstick that encourages competition
+
+This process requires a series of phases (Philips, 2018):
+
+•	Capture information.
+
+• Generate meaningful comparisons or case studies.
+
+• Distribute information through a network of stakeholders, often across multiple levels of government.
+
+The work tries to advance in the second phase (generate meaningful comparisons) by observing an interactive dashboard, based on the information contained in CESEL. The dashboard can serve as a guide so that municipalities can compare themselves with the average values of their population stratum, so that they can serve as “benchmarking” in order to optimize the use of resources and check that they are in line with preferences of its citizens.
+
+####2018
+
+85% municipalities in Spain have less than 5000 citizens and represent 12% of the population.
+
+Average costs per inhabitant are U-shaped, with land in municipalities being 5,000 to 10,000 inhabitants.
+
+![Image](assets/CM.jpg)
+
+Therefore, this is in opposition to Law (Ley 27/2013 de Racionalización y Sostenibilidad de la Administración Local ), which established the figure of 20,000 citizens as the figure to be considered in order to promote the voluntary merger of municipalities.
+This aggregation measure would only save costs for municipalities with less than 2,000 and to a very small extent for municipalities with 2,000 to 5,000 citizens, only 2.5 million citizens.
+
+
+
+### :see_no_evil: **Usage**
+
+#### Getting Started
+
+##### Running the app locally
+
+First create a virtual environment with conda or venv inside a temp folder, then activate it.
 
 ```
-main_script.py -p ./data/raw/raw_data_project_m1.db --country Malta --unemployed yes
+virtualenv venv
+# Windows
+venv\Scripts\activate
+# Or Linux
+source venv/bin/activate
 ```
+
+Clone the git repo, then install the requirements with pip
+
+```
+git clone https://github.com/carpiero/DataTown.git
+cd /DataTown
+pip install -r requirements.txt
+```
+
+Run the app
+
+```
+python app.py
+```
+
+#### Built With
+
+- [Dash](https://dash.plot.ly/) - Main server and interactive components
+- [Plotly Python](https://plot.ly/python/) - Used to create the interactive plots
+
+
+## :art: **Screenshots**
+
+The following are screenshots for the app in this repo:
+
+
+![animated1](assets/readme.gif)
 
 
 ### :computer: **Technology stack**
 
 - Python==3.7.3
-- pandas==0.24.2
-- sqlalchemy==1.3.16
-- requests==2.23.0
-- bs4==4.9.1
+- pandas==1.0.3
+- geopandas==0.8.1
+- dash==1.13.4
 - numpy==1.18.1
-- argparse==3.2
+- plotly==4.8.2
+- gunicorn==20.0.4
+- pyarrow==0.17.1
 
-## **Data:**
-
-There are 3 different datasource involved:
-
-- **Tables (.db).** [Here](http://www.potacho.com/files/ironhack/raw_data_project_m1.db) you can find the `.db` file with the main dataset.
-
-- **API.** We will use the API from the [Open Skills Project](http://dataatwork.org/data/).  
-
-- **Web Scraping.** Finally, we will need to retrieve information about country codes from [Eurostat](https://ec.europa.eu/eurostat/statistics-explained/index.php/Glossary:Country_codes) website.
-
-### :see_no_evil: **Usage**
-
-In the first place, we want to obtain the data of a specific job per gender and country of a concrete survey.
-
-Second I have decided to put the argument unemployed.
-
-If the argument is yes, you obtain the percentage of a specific jobs by gender over the total number of people surveyed in a certain country. Because you have a Job title called 'Unemployed or Part time job or Inactive', These are people who answered the survey who did not have a full-time job, Therefore they can only be Unemployed or they have a Part time job or are Inactive(like students or eldery)
-
-If the argument is no, you obtain the percentage of a specific jobs by gender over the total number of people who have a full time job in a certain country. 
-
-Besides I have set the string 'Less than 1%' for the percentages between 1 and more than 0, to make it more readable.
-
-Third, you get the results for a specific country with argument -country, you can also get the percentage for the total number of people surveyed or for the total number of people who have a full time job.
-
-Fourth to handle errors when you set a wrong argument I have used two options.
-
-when you enter a wrong country or does not appear in the survey, the terminal prints the list of possible countries.
-
-In addition, when you enter a wrong unemployed argument, the terminal prints a native error and the choices.
 
 ### :file_folder: **Folder structure**
 ```
-└── project
+└── DataTown
     ├── __trash__
-    ├── .gitignore
-    ├── .env
-    ├── requeriments.txt
-    ├── README.md
-    ├── main_script.py
+    ├── assets
+    │    ├── github.svg
+    │    ├── readme.gif
+    │    ├── resizin_scrpt.js
+    │    ├── s1.css
+    │    ├── styles.css
+    │    ├── CM.jpg
+    │    └── Madrid.jpg
+    ├── data
+    │    ├── main_processed
+    │    ├── main_raw
+    │    ├── main_raw_exce
+    │    └── main_temp
     ├── notebooks
+    ├── o_raw_acquisition
+    │    ├── __init__.py
+    │    └── m_raw_acquisition.py
     ├── p_acquisition
-    │   ├── __init__.py
-    │   └── m_acquisition.py
-    ├── p_analysis
-    │   ├── __init__.py
-    │   └── m_analysis.py
-    ├── p_reporting
-    │   ├── __init__.py
-    │   └── m_reporting.py
-    ├── p_wrangling
-    │   ├── __init__.py
-    │   └── m_wrangling.py
-    └── data
-        ├── raw
-        ├── processed
-        └── results
+    │    ├── __init__.py
+    │    └── m_acquisition.py
+    ├── p_graphic
+    │    ├── __init__.py
+    │    └── m_graphic.py
+    ├── p_pivot_hard_load
+    │    ├── __init__.py
+    │    └── m_pivot_hard_load.py
+    ├── .gitignore
+    ├── app.py
+    ├── controls.py
+    ├── main_script.py
+    ├── Procfile
+    ├── README.md
+    └── requeriments.txt
+    
+    
 ```
-
-![animated1](assets/readme.gif)
 
 

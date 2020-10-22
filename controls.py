@@ -43,7 +43,7 @@ pdc=sorted(list(df_final_pob_melt['Descripción'].unique()))
 pdc.insert(0, 'TODOS')
 PDC = dict(zip(pdc, pdc))
 
-###########################   main graph
+###########################   indicadores_table
 
 df_table_c = df_indicadores_pob.pivot_table(index=['CCAA','Descripción' , 'Unidades físicas de referencia'] ,
                                                       values=['Nº unidades'] ,
@@ -64,7 +64,7 @@ df_table_p=df_indicadores_pob.pivot_table(index=['Provincia','Descripción' , 'U
 df_table_m=df_indicadores_pob_pivot
 
 
-###########################   individual graph
+###########################   coste_bars graph
 
 df_n = df_final_pob_melt.pivot_table(index=['Descripción'] , values=['coste_efectivo'] , aggfunc=sum).sort_values(
             by='coste_efectivo' , ascending=False).reset_index()
@@ -81,7 +81,7 @@ df_m=df_final_pob_melt_PC[['Nombre Ente Principal' , 'cohorte_pob' , 'Descripci�
 df_m['coste_efectivo_PC'] = round(df_m['coste_efectivo_PC'] , )
 
 
-###########################   count graph
+###########################   percentil_graph graph
 
 df_count_c=df_final_pob.pivot_table(index=['CCAA'] ,values=['TOTAL','Población 2018'] ,aggfunc=sum).reset_index()
 df_count_c['PC_TOTAL'] = round(df_count_c['TOTAL']/df_count_c['Población 2018'],)

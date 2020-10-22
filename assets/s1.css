@@ -572,8 +572,8 @@ there.
     margin: 0 !important;
     margin-bottom: 25px !important;
   }
-  #individual_graph,
-  #count_graph,
+  #coste_bars_graph,
+  #percentil_graph,
   #aggregate_graph {
     position: static !important;
   }
