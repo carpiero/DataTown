@@ -52,7 +52,7 @@ The process known as “benchmarking” (copying from the best) has been reveale
 
 • Hold governments and service providers accountable to citizens and establish a common yardstick that encourages competition
 
-This process requires a series of phases (Philips, 2018):
+This process requires a series of phases (Phillips, 2018):
 
 • Capture information.
 
@@ -73,7 +73,8 @@ Average costs per inhabitant are U-shaped, with land in municipalities being 5,0
 Therefore, this is in opposition to Law (Ley 27/2013 de Racionalización y Sostenibilidad de la Administración Local ), which established the figure of 20,000 citizens as the figure to be considered in order to promote the voluntary merger of municipalities.
 This aggregation measure would only save costs for municipalities with less than 2,000 and to a very small extent for municipalities with 2,000 to 5,000 citizens, only 2.5 million citizens.
 
-
+##### Bibliography:
+LEAH PHILLIPS. (2018) Improving the Performance of Sub-national Governments through Benchmarking and Performance Reporting. OECD Working Papers on Fiscal Federalism No. 22
 
 ## :see_no_evil: **Usage**
 
