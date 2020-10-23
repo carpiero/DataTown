@@ -166,3 +166,16 @@ df_final_pob_round_melt_PC_object[df_final_pob_round_melt_PC_object.select_dtype
             df_final_pob_round_melt_PC_object.select_dtypes(['category']).apply(lambda x: x.astype('object'))
 
 df_cohorte=df_final_pob[['Nombre Ente Principal','cohorte_pob']]
+
+
+######################### box graph
+
+df_final_pob_round_color = df_final_pob[['PC_TOTAL','CCAA', 'Provincia', 'Nombre Ente Principal','Población 2018']]
+df_final_pob_round_color['Población'] = df_final_pob_round_color['Población 2018']
+df_final_pob_round_color['PC_TOTAL'] = round(df_final_pob_round_color['PC_TOTAL'],)
+df_final_pob_round_color['color']='color'
+
+df_final_pob_round_melt_PC_object_color=df_final_pob_round_melt_PC
+df_final_pob_round_melt_PC_object_color[df_final_pob_round_melt_PC_object_color.select_dtypes(['category']).columns] = \
+            df_final_pob_round_melt_PC_object_color.select_dtypes(['category']).apply(lambda x: x.astype('object'))
+df_final_pob_round_melt_PC_object_color['color']='color'

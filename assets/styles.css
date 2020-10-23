@@ -156,3 +156,9 @@ body {
   width: calc(100% - 30px);
 }
 
+#box_graph {
+  position: absolute;
+  height: calc(100% - 30px);
+  width: calc(100% - 30px);
+}
+

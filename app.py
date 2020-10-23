@@ -20,7 +20,8 @@ warnings.filterwarnings('ignore')
 from controls import  CCAA_dict, PROV,  MUNICIPIOS, PDC, df_final_pob_melt, df_final_pob, df_indicadores_pob, df_final_pob_dropdown,\
     df_final_pob_dropdown_c, df_final_pob_poblaciontext, df_final_pob_melt_PC, df_table_c, df_table_n, df_table_p, df_table_m,  df_n, \
     df_c, df_p, df_m, df_count_c, df_count_cn, df_count_c_pc, df_count_p, df_count_p_pc, df_count_c_new_n, df_count_p_new_n,df_count_m_pc,\
-    counties, CCAA_CO, PROV_CO, MUNI_CO, df_zoom_pob, df_final_pob_round, df_final_pob_round_melt_PC, df_final_pob_round_melt_PC_object, df_cohorte
+    counties, CCAA_CO, PROV_CO, MUNI_CO, df_zoom_pob, df_final_pob_round, df_final_pob_round_melt_PC, df_final_pob_round_melt_PC_object, df_cohorte,\
+    df_final_pob_round_color, df_final_pob_round_melt_PC_object_color
 
 
 ############# RUN APP
@@ -204,7 +205,11 @@ app.layout = html.Div(
             [
                 html.Div(
                     [dcc.Graph(id="map_graph",config={'modeBarButtonsToRemove': ['lasso2d','pan2d'],'displaylogo': False})],
-                    className="pretty_container seven columns",style={'min-height': '680px'},
+                    className="pretty_container eight columns",style={'min-height': '680px'},
+                ),
+                html.Div(
+                    [dcc.Graph(id="box_graph",config = {'displayModeBar': False})],
+                    className="pretty_container four columns",style={'min-height': '680px'},
                 )
             ],
             className="row flex-display",
@@ -1689,15 +1694,180 @@ def make_map_figure(CCAA_types, PROV_types,municipio_types,partida_de_coste_type
     return fig
 
 
+################    box graph
+@app.callback(
+    Output("box_graph", "figure"),
+    [
+        Input("CCAA_types" , "value") , Input("PROV_types" , "value") , Input("municipio_types" , "value") ,
+        Input("partida_de_coste_types" , "value")
+    ],[State("indicadores_table", "relayoutData")]
+    # [State("lock_selector", "value"), State("indicadores_table", "relayoutData")],
+)
+
+def make_box_figure(CCAA_types, PROV_types,municipio_types,partida_de_coste_types, indicadores_table):
+    if partida_de_coste_types == 'TODOS':
+        if CCAA_types == 'TODAS' and PROV_types == 'TODAS' and municipio_types == 'TODOS':
+            df = df_final_pob_round_color
+
+            fig = px.box(df , y='PC_TOTAL',labels={'PC_TOTAL': 'Coste por habitante'} ,
+                                       hover_name='Nombre Ente Principal' , hover_data={'Población': ':,' ,'color':False,
+                                                                                        'PC_TOTAL': ":,€"},template='seaborn',
+                         color='color', color_discrete_map={'color': 'rgb(55, 83, 109)'})
+
+            fig.update_layout( xaxis = dict(title='Total Municipios'))
+
+
+        elif CCAA_types != 'TODAS' and PROV_types == 'TODAS' and municipio_types == 'TODOS':
+            df = df_final_pob_round_color.loc[df_final_pob_round_color['CCAA']==CCAA_types]
+
+            fig = px.box(df , y='PC_TOTAL' , labels={'PC_TOTAL': 'Coste por habitante'} ,
+                         hover_name='Nombre Ente Principal' , hover_data={'Población': ':,' , 'color': False ,
+                                                                          'PC_TOTAL': ":,€"} , template='seaborn' ,
+                         color='color' , color_discrete_map={'color': 'rgb(55, 83, 109)'})
+
+            fig.update_layout(xaxis=dict(title=f'Municipios de {CCAA_types}'))
 
 
 
+        elif CCAA_types != 'TODAS' and PROV_types != 'TODAS' and municipio_types == 'TODOS':
+            df = df_final_pob_round_color.loc[df_final_pob_round_color['Provincia'] == PROV_types]
+
+            fig = px.box(df , y='PC_TOTAL' , labels={'PC_TOTAL': 'Coste por habitante'} ,
+                         hover_name='Nombre Ente Principal' , hover_data={'Población': ':,' , 'color': False ,
+                                                                          'PC_TOTAL': ":,€"} , template='seaborn' ,
+                         color='color' , color_discrete_map={'color': 'rgb(55, 83, 109)'})
+
+            fig.update_layout(xaxis=dict(title=f'Municipios de {PROV_types}'))
+
+
+
+        elif CCAA_types == 'TODAS' and PROV_types != 'TODAS' and municipio_types == 'TODOS':
+            df = df_final_pob_round_color.loc[df_final_pob_round_color['Provincia'] == PROV_types]
+
+            fig = px.box(df , y='PC_TOTAL' , labels={'PC_TOTAL': 'Coste por habitante'} ,
+                         hover_name='Nombre Ente Principal' , hover_data={'Población': ':,' , 'color': False ,
+                                                                          'PC_TOTAL': ":,€"} , template='seaborn' ,
+                         color='color' , color_discrete_map={'color': 'rgb(55, 83, 109)'})
+
+            fig.update_layout(xaxis=dict(title=f'Municipios de {PROV_types}'))
+
+
+        else:
+
+            PROV = MUNI_CO.loc[MUNI_CO['Nombre Ente Principal'] == municipio_types , 'Provincia'].to_list()
+            PROV = PROV[0]
+            df = df_final_pob_round_color.loc[df_final_pob_round_color['Provincia'] == PROV]
+
+            fig = px.box(df , y='PC_TOTAL' , labels={'PC_TOTAL': 'Coste por habitante'} ,
+                         hover_name='Nombre Ente Principal' , hover_data={'Población': ':,' , 'color': False ,
+                                                                          'PC_TOTAL': ":,€"} , template='seaborn' ,
+                         color='color' , color_discrete_map={'color': 'rgb(55, 83, 109)'})
+
+            fig.update_layout(xaxis=dict(title=f'Municipios de {PROV}'))
+
+
+    else:
+        if CCAA_types == 'TODAS' and PROV_types == 'TODAS' and municipio_types == 'TODOS':
+            df = df_final_pob_round_melt_PC_object_color
+            df= df.loc[(df['Descripción']==partida_de_coste_types)& (df['coste_efectivo_PC'] > 0)]
+
+            fig = px.box(df , y='coste_efectivo_PC' , labels={'coste_efectivo_PC': 'Coste por habitante PC'} ,
+                         hover_name='Nombre Ente Principal' , hover_data={'Población': ':,' , 'color': False ,
+                                                                          'coste_efectivo_PC': ":,€"} , template='seaborn' ,
+                         color='color' , color_discrete_map={'color': 'rgb(55, 83, 109)'})
+
+            fig.update_layout(xaxis=dict(title='Total Municipios'))
+
+
+        elif CCAA_types != 'TODAS' and PROV_types == 'TODAS' and municipio_types == 'TODOS':
+
+            df = df_final_pob_round_melt_PC_object_color[df_final_pob_round_melt_PC_object_color['CCAA'] == CCAA_types]
+            df = df.loc[(df['Descripción'] == partida_de_coste_types) & (df['coste_efectivo_PC'] > 0)]
+
+            fig = px.box(df , y='coste_efectivo_PC' , labels={'coste_efectivo_PC': 'Coste por habitante PC'} ,
+                         hover_name='Nombre Ente Principal' , hover_data={'Población': ':,' , 'color': False ,
+                                                                          'coste_efectivo_PC': ":,€"} ,
+                         template='seaborn' ,
+                         color='color' , color_discrete_map={'color': 'rgb(55, 83, 109)'})
+
+            fig.update_layout(xaxis=dict(title=f'Municipios de {CCAA_types}'))
+
+
+        elif CCAA_types != 'TODAS' and PROV_types != 'TODAS' and municipio_types == 'TODOS':
+
+            df = df_final_pob_round_melt_PC_object_color[df_final_pob_round_melt_PC_object_color['Provincia'] == PROV_types]
+            df = df.loc[(df['Descripción'] == partida_de_coste_types) & (df['coste_efectivo_PC'] > 0)]
+
+            fig = px.box(df , y='coste_efectivo_PC' , labels={'coste_efectivo_PC': 'Coste por habitante PC'} ,
+                         hover_name='Nombre Ente Principal' , hover_data={'Población': ':,' , 'color': False ,
+                                                                          'coste_efectivo_PC': ":,€"} ,
+                         template='seaborn' ,
+                         color='color' , color_discrete_map={'color': 'rgb(55, 83, 109)'})
+
+            fig.update_layout(xaxis=dict(title=f'Municipios de {PROV_types}'))
+
+
+
+        elif CCAA_types == 'TODAS' and PROV_types != 'TODAS' and municipio_types == 'TODOS':
+
+            df = df_final_pob_round_melt_PC_object_color[df_final_pob_round_melt_PC_object_color['Provincia'] == PROV_types]
+            df = df.loc[(df['Descripción'] == partida_de_coste_types) & (df['coste_efectivo_PC'] > 0)]
+
+            fig = px.box(df , y='coste_efectivo_PC' , labels={'coste_efectivo_PC': 'Coste por habitante PC'} ,
+                         hover_name='Nombre Ente Principal' , hover_data={'Población': ':,' , 'color': False ,
+                                                                          'coste_efectivo_PC': ":,€"} ,
+                         template='seaborn' ,
+                         color='color' , color_discrete_map={'color': 'rgb(55, 83, 109)'})
+
+            fig.update_layout(xaxis=dict(title=f'Municipios de {PROV_types}'))
+
+
+
+        else:
+
+            PROV = MUNI_CO.loc[MUNI_CO['Nombre Ente Principal'] == municipio_types , 'Provincia'].to_list()
+            PROV = PROV[0]
+
+            df = df_final_pob_round_melt_PC_object_color[df_final_pob_round_melt_PC_object_color['Provincia'] == PROV]
+            df = df.loc[(df['Descripción'] == partida_de_coste_types) & (df['coste_efectivo_PC'] > 0)]
+
+            fig = px.box(df , y='coste_efectivo_PC' , labels={'coste_efectivo_PC':'Coste por habitante PC'} ,
+                         hover_name='Nombre Ente Principal' , hover_data={'Población': ':,' , 'color': False ,
+                                                                          'coste_efectivo_PC': ":,€"} ,
+                         template='seaborn' ,
+                         color='color' , color_discrete_map={'color': 'rgb(55, 83, 109)'})
+
+            fig.update_layout(xaxis=dict(title=f'Municipios de {PROV}'))
+
+
+
+
+
+    fig.update_layout( yaxis=dict(gridcolor='#cacaca',zerolinecolor='#929292' ,
+                          title='Coste €/hab.' ,
+                          titlefont_size=16 ,
+                          tickfont_size=12 , showticklabels=True , color='rgb(50, 50, 50)') ,
+                      xaxis=dict(showline=False , linecolor='#929292' , linewidth=0.5,titlefont_size=16 ,tickfont_size=14,
+                    color='rgb(50, 50, 50)'),plot_bgcolor="#F9F9F9" ,paper_bgcolor="#F9F9F9" , title_font_color='rgb(50, 50, 50)',showlegend=False)
+
+
+
+
+    fig.update_layout(margin={"r": 20 , "t": 40 , "l": 20 , "b": 20})
+
+    if partida_de_coste_types == 'TODOS':
+        fig.update_layout(title=f'Coste por habitante Total',yaxis=dict(title='Coste €/hab.'))
+
+    else:
+        fig.update_layout(title=f'Coste por habitante por Partida de coste',yaxis=dict(title=f'Coste €/hab., {partida_de_coste_types}'))
+
+    return fig
 
 
 
 
 # Main
 if __name__ == "__main__":
-    app.run_server(debug=True)
+    app.run_server(debug=False)
 
     ########### debug FALSE
