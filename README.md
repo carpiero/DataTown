@@ -8,7 +8,7 @@
 
 
 
-## :raising_hand: **CESEL DASHBOARD** 
+## :loudspeaker: **CESEL DASHBOARD** 
 
 #### CESEL: 
 Effective Cost of the Services of the Local Entities(municipality) in Spain, which includes complete and disaggregated information on the number of services provided (measured based on a series of 85 indicators or physical units of reference) and their cost ( disaggregated into 43 municipal competencies or services), covering practically all of the existing municipal services.
