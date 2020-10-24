@@ -1712,7 +1712,7 @@ def make_box_figure(CCAA_types, PROV_types,municipio_types,partida_de_coste_type
             fig = px.box(df , y='PC_TOTAL',labels={'PC_TOTAL': 'Coste por habitante'} ,
                                        hover_name='Nombre Ente Principal' , hover_data={'Población': ':,' ,'color':False,
                                                                                         'PC_TOTAL': ":,€"},template='seaborn',
-                         color='color', color_discrete_map={'color': 'rgb(55, 83, 109)'})
+                         color='color', color_discrete_map={'color': 'rgb(42, 35, 160)'})
 
             fig.update_layout( xaxis = dict(title='Total Municipios'))
 
@@ -1723,7 +1723,7 @@ def make_box_figure(CCAA_types, PROV_types,municipio_types,partida_de_coste_type
             fig = px.box(df , y='PC_TOTAL' , labels={'PC_TOTAL': 'Coste por habitante'} ,
                          hover_name='Nombre Ente Principal' , hover_data={'Población': ':,' , 'color': False ,
                                                                           'PC_TOTAL': ":,€"} , template='seaborn' ,
-                         color='color' , color_discrete_map={'color': 'rgb(55, 83, 109)'})
+                         color='color' , color_discrete_map={'color': 'rgb(42, 35, 160)'})
 
             fig.update_layout(xaxis=dict(title=f'Municipios de {CCAA_types}'))
 
@@ -1735,7 +1735,7 @@ def make_box_figure(CCAA_types, PROV_types,municipio_types,partida_de_coste_type
             fig = px.box(df , y='PC_TOTAL' , labels={'PC_TOTAL': 'Coste por habitante'} ,
                          hover_name='Nombre Ente Principal' , hover_data={'Población': ':,' , 'color': False ,
                                                                           'PC_TOTAL': ":,€"} , template='seaborn' ,
-                         color='color' , color_discrete_map={'color': 'rgb(55, 83, 109)'})
+                         color='color' , color_discrete_map={'color': 'rgb(42, 35, 160)'})
 
             fig.update_layout(xaxis=dict(title=f'Municipios de {PROV_types}'))
 
@@ -1747,7 +1747,7 @@ def make_box_figure(CCAA_types, PROV_types,municipio_types,partida_de_coste_type
             fig = px.box(df , y='PC_TOTAL' , labels={'PC_TOTAL': 'Coste por habitante'} ,
                          hover_name='Nombre Ente Principal' , hover_data={'Población': ':,' , 'color': False ,
                                                                           'PC_TOTAL': ":,€"} , template='seaborn' ,
-                         color='color' , color_discrete_map={'color': 'rgb(55, 83, 109)'})
+                         color='color' , color_discrete_map={'color': 'rgb(42, 35, 160)'})
 
             fig.update_layout(xaxis=dict(title=f'Municipios de {PROV_types}'))
 
@@ -1761,7 +1761,7 @@ def make_box_figure(CCAA_types, PROV_types,municipio_types,partida_de_coste_type
             fig = px.box(df , y='PC_TOTAL' , labels={'PC_TOTAL': 'Coste por habitante'} ,
                          hover_name='Nombre Ente Principal' , hover_data={'Población': ':,' , 'color': False ,
                                                                           'PC_TOTAL': ":,€"} , template='seaborn' ,
-                         color='color' , color_discrete_map={'color': 'rgb(55, 83, 109)'})
+                         color='color' , color_discrete_map={'color': 'rgb(42, 35, 160)'})
 
             fig.update_layout(xaxis=dict(title=f'Municipios de {PROV}'))
 
@@ -1774,7 +1774,7 @@ def make_box_figure(CCAA_types, PROV_types,municipio_types,partida_de_coste_type
             fig = px.box(df , y='coste_efectivo_PC' , labels={'coste_efectivo_PC': 'Coste por habitante PC'} ,
                          hover_name='Nombre Ente Principal' , hover_data={'Población': ':,' , 'color': False ,
                                                                           'coste_efectivo_PC': ":,€"} , template='seaborn' ,
-                         color='color' , color_discrete_map={'color': 'rgb(55, 83, 109)'})
+                         color='color' , color_discrete_map={'color': 'rgb(42, 35, 160)'})
 
             fig.update_layout(xaxis=dict(title='Total Municipios'))
 
@@ -1788,7 +1788,7 @@ def make_box_figure(CCAA_types, PROV_types,municipio_types,partida_de_coste_type
                          hover_name='Nombre Ente Principal' , hover_data={'Población': ':,' , 'color': False ,
                                                                           'coste_efectivo_PC': ":,€"} ,
                          template='seaborn' ,
-                         color='color' , color_discrete_map={'color': 'rgb(55, 83, 109)'})
+                         color='color' , color_discrete_map={'color': 'rgb(42, 35, 160)'})
 
             fig.update_layout(xaxis=dict(title=f'Municipios de {CCAA_types}'))
 
@@ -1802,7 +1802,7 @@ def make_box_figure(CCAA_types, PROV_types,municipio_types,partida_de_coste_type
                          hover_name='Nombre Ente Principal' , hover_data={'Población': ':,' , 'color': False ,
                                                                           'coste_efectivo_PC': ":,€"} ,
                          template='seaborn' ,
-                         color='color' , color_discrete_map={'color': 'rgb(55, 83, 109)'})
+                         color='color' , color_discrete_map={'color': 'rgb(42, 35, 160)'})
 
             fig.update_layout(xaxis=dict(title=f'Municipios de {PROV_types}'))
 
@@ -1817,7 +1817,7 @@ def make_box_figure(CCAA_types, PROV_types,municipio_types,partida_de_coste_type
                          hover_name='Nombre Ente Principal' , hover_data={'Población': ':,' , 'color': False ,
                                                                           'coste_efectivo_PC': ":,€"} ,
                          template='seaborn' ,
-                         color='color' , color_discrete_map={'color': 'rgb(55, 83, 109)'})
+                         color='color' , color_discrete_map={'color': 'rgb(42, 35, 160)'})
 
             fig.update_layout(xaxis=dict(title=f'Municipios de {PROV_types}'))
 
@@ -1835,7 +1835,7 @@ def make_box_figure(CCAA_types, PROV_types,municipio_types,partida_de_coste_type
                          hover_name='Nombre Ente Principal' , hover_data={'Población': ':,' , 'color': False ,
                                                                           'coste_efectivo_PC': ":,€"} ,
                          template='seaborn' ,
-                         color='color' , color_discrete_map={'color': 'rgb(55, 83, 109)'})
+                         color='color' , color_discrete_map={'color': 'rgb(42, 35, 160)'})
 
             fig.update_layout(xaxis=dict(title=f'Municipios de {PROV}'))
 
