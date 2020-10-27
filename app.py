@@ -28,7 +28,38 @@ from controls import  CCAA_dict, PROV,  MUNICIPIOS, PDC, df_final_pob_melt, df_f
 app = dash.Dash(__name__, meta_tags=[{"name": "viewport", "content": "width=device-width"}])
 server = app.server
 
-# Create controls
+################### google analytics
+
+app.index_string = '''<!DOCTYPE html>
+<html>
+<head>
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script>(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-180754723-1', 'auto');
+    ga('send', 'pageview');
+    </script>
+  <!-- End Global Google Analytics -->
+{%metas%}
+<title>{%title%}</title>
+{%favicon%}
+{%css%}
+</head>
+<body>
+{%app_entry%}
+<footer>
+{%config%}
+{%scripts%}
+{%renderer%}
+</footer>
+</body>
+</html>
+'''
+
+#################    Create controls
 
 CCAA_options = [ {"label": CCAA_dict[x], "value": x}for x in CCAA_dict]
 
