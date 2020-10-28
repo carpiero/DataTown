@@ -15,6 +15,7 @@ def main(df_coste,df_indicadores):
 
 
 
+
 if __name__ == '__main__':
     df_coste = pd.read_parquet(f'./data/main_raw/df_coste.parquet')
     df_indicadores = pd.read_parquet(f'./data/main_raw/df_indicadores.parquet')

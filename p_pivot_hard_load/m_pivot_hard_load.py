@@ -14,3 +14,4 @@ def pivot():
 
     df_indicadores_pob_pivot.to_parquet('./data/main_processed/df_indicadores_pob_pivot.parquet')
     print('last')
+

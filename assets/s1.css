@@ -563,6 +563,7 @@ there.
   }
 }
 
+
 /* Larger than tablet, for screens smaller than 768px */
 @media (max-width: 550px) {
   .flex-display {
