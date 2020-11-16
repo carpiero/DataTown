@@ -50,7 +50,7 @@ app.index_string = '''<!DOCTYPE html>
     <meta name="description" content="DataTown | CESEL Interactive Dashboard" />
     <meta name="title" property="og:title" content="DataTown | CESEL Interactive Dashboard" />
     <meta property="og:type" content="DataTown | CESEL Interactive Dashboard" />
-    <meta name="image" property="og:image" content="https://i.ibb.co/G7YqcK6/Captura-de-pantalla-2020-11-16-173417.jpg" />
+    <meta name="image" property="og:image" content="https://i.ibb.co/vQkQkYL/jorge-fernandez-salas-Ch-SZETOal-I-unsplash-asdasdasdasda.jpg" />
     <meta name="description" property="og:description" content="DataTown | CESEL Interactive Dashboard" />
     <meta name="author" content="DataTown | CESEL Interactive Dashboard" />
 </head>
