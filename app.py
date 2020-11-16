@@ -47,6 +47,12 @@ app.index_string = '''<!DOCTYPE html>
 <title>{%title%}</title>
 {%favicon%}
 {%css%}
+    <meta name="description" content="hola" />
+    <meta name="title" property="og:title" content="hola" />
+    <meta property="og:type" content="hola" />
+    <meta name="image" property="og:image" content="https://i.ibb.co/G7YqcK6/Captura-de-pantalla-2020-11-16-173417.jpg" />
+    <meta name="description" property="og:description" content="hola" />
+    <meta name="author" content="hola" />
 </head>
 <body>
 {%app_entry%}
@@ -58,6 +64,7 @@ app.index_string = '''<!DOCTYPE html>
 </body>
 </html>
 '''
+
 
 ##################    Create controls
 
