@@ -47,12 +47,12 @@ app.index_string = '''<!DOCTYPE html>
 <title>{%title%}</title>
 {%favicon%}
 {%css%}
-    <meta name="description" content="hola" />
-    <meta name="title" property="og:title" content="hola" />
-    <meta property="og:type" content="hola" />
+    <meta name="description" content="DataTown | CESEL Interactive Dashboard" />
+    <meta name="title" property="og:title" content="DataTown | CESEL Interactive Dashboard" />
+    <meta property="og:type" content="DataTown | CESEL Interactive Dashboard" />
     <meta name="image" property="og:image" content="https://i.ibb.co/G7YqcK6/Captura-de-pantalla-2020-11-16-173417.jpg" />
-    <meta name="description" property="og:description" content="hola" />
-    <meta name="author" content="hola" />
+    <meta name="description" property="og:description" content="DataTown | CESEL Interactive Dashboard" />
+    <meta name="author" content="DataTown | CESEL Interactive Dashboard" />
 </head>
 <body>
 {%app_entry%}
