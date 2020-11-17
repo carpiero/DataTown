@@ -25,7 +25,7 @@ from controls import  CCAA_dict, PROV,  MUNICIPIOS, PDC, df_final_pob_melt, df_f
 
 
 ############# RUN APP
-app = dash.Dash(__name__, meta_tags=[{"name": "viewport", "content": "width=device-width"}])
+app = dash.Dash(__name__, meta_tags=[{"name": "viewport", "content": "width=device-width"}],title='DataTown',update_title='Cargando...')
 server = app.server
 
 ################### google analytics
